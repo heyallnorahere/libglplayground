@@ -14,7 +14,7 @@ namespace libplayground {
             std::string formatted_message = "OpenGL: " + std::string(message);
             switch (type) {
             case GL_DEBUG_TYPE_ERROR:
-                spdlog::error(formatted_message);
+                throw std::runtime_error(formatted_message);
                 break;
             default:
                 spdlog::info(formatted_message);

@@ -14,7 +14,7 @@ int main(int argc, const char* argv[]) {
     ref<application> app = LIBGLPLAYGROUND_APP_NAMESPACE::get_application_instance();
     try {
         app->run();
-    } catch (std::exception e) {
+    } catch (const std::exception& e) {
         spdlog::error(e.what());
         return 1;
     }

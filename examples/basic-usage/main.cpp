@@ -30,14 +30,10 @@ namespace basic_usage {
                 0, 1, 3,
                 1, 2, 3
             };
-            this->m_vao = ref<vertex_array_object>::create(attributes);
+            this->m_vao = ref<vertex_array_object>::create();
             this->m_vbo = ref<vertex_buffer_object>::create(vertices);
             this->m_ebo = ref<element_buffer_object>::create(indices);
-            for (size_t i = 0; i < attributes.size(); i++) {
-                const auto& attrib = attributes[i];
-                glVertexAttribPointer((GLuint)i, (GLint)attrib.elements, attrib.type, attrib.normalized, (GLsizei)attrib.stride, (void*)attrib.offset);
-                glEnableVertexAttribArray((GLuint)i);
-            }
+            this->m_vao->add_vertex_attributes(attributes);
         }
         virtual void render() override {
             this->m_vao->bind();
