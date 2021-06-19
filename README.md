@@ -11,5 +11,5 @@ This project currently runs on [CMake](https://cmake.org). Once I get a release 
 ### Build status
 
 | System | Status |
-| :---   | :---:  |
+| ---    | ---    |
 | Ubuntu | [![build](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-ubuntu.yml) |
