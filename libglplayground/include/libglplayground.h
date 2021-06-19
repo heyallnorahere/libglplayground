@@ -13,5 +13,8 @@
 #include "libglplayground/element_buffer_object.h"
 #include "libglplayground/shader.h"
 
+// class for easily reading and creating shaders
+#include "libglplayground/shader_factory.h"
+
 // basic main implementation
 #include "libglplayground/main.h"

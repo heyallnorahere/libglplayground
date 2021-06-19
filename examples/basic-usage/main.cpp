@@ -34,16 +34,21 @@ namespace basic_usage {
             this->m_vbo = ref<vertex_buffer_object>::create(vertices);
             this->m_ebo = ref<element_buffer_object>::create(indices);
             this->m_vao->add_vertex_attributes(attributes);
+            shader_factory factory;
+            this->m_shader = factory.multiple_files("shaders/vertex.glsl", "shaders/fragment.glsl");
         }
         virtual void render() override {
+            this->m_shader->bind();
             this->m_vao->bind();
             this->m_ebo->draw(GL_TRIANGLES);
             this->m_vao->unbind();
+            this->m_shader->unbind();
         }
     private:
         ref<vertex_array_object> m_vao;
         ref<vertex_buffer_object> m_vbo;
         ref<element_buffer_object> m_ebo;
+        ref<shader> m_shader;
     };
     ref<application> get_application_instance() {
         return ref<basic_usage_app>::create();

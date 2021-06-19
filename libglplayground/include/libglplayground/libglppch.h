@@ -6,6 +6,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <spdlog/spdlog.h>
 #include <string>
+#include <sstream>
+#include <fstream>
 #include <vector>
 #include <memory>
 #include <utility>
