@@ -11,6 +11,7 @@
 #include "libglplayground/vertex_array_object.h"
 #include "libglplayground/vertex_buffer_object.h"
 #include "libglplayground/element_buffer_object.h"
+#include "libglplayground/shader.h"
 
 // basic main implementation
 #include "libglplayground/main.h"

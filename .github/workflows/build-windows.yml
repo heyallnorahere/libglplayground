@@ -1,4 +1,4 @@
-name: build-windows.yml
+name: build-windows
 on: [ push ]
 jobs:
   build-cmake:

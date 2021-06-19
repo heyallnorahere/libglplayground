@@ -47,7 +47,7 @@ namespace libplayground {
             GLint flags;
             glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
             bool debug = flags & GL_CONTEXT_FLAG_DEBUG_BIT;
-            if (debug && major_opengl_version >= 4 && minor_opengl_version >= 3) {
+            if (debug && major_opengl_version >= 4 && minor_opengl_version >= 3) { // glDebugMessageCallback is only available on version 4.3 and above (http://docs.gl/gl4/glDebugMessageCallback)
                 glEnable(GL_DEBUG_OUTPUT);
                 glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
                 glDebugMessageCallback(opengl_debug_callback, nullptr);
