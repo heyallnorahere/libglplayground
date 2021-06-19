@@ -1,4 +1,4 @@
-# libglplayground [![License](https://img.shields.io/github/license/yodasoda1219/libglplayground)](https://github.com/yodasoda1219/libglplayground/blob/main/LICENSE)
+# libglplayground [![License](https://img.shields.io/github/license/yodasoda1219/libglplayground)](https://github.com/yodasoda1219/libglplayground/blob/main/LICENSE) ![GitHub repo size](https://img.shields.io/github/repo-size/yodasoda1219/libglplayground)
 
 ## About
 

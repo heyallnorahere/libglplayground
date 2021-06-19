@@ -21,6 +21,7 @@ namespace libplayground {
             assembled.vbo = ref<vertex_buffer_object>::create(m.vertices);
             assembled.ebo = ref<element_buffer_object>::create(m.indices);
             assembled.vao->add_vertex_attributes(attributes);
+            assembled.textures = m.textures;
             this->m_meshes.push_back(assembled);
         }
         void renderer::render() {
@@ -31,6 +32,9 @@ namespace libplayground {
             for (auto& mesh : this->m_meshes) {
                 if (this->m_shader) {
                     this->m_shader->uniform_mat4("model", mesh.transform);
+                }
+                for (size_t i = 0; i < mesh.textures.size(); i++) {
+                    mesh.textures[i]->bind((uint32_t)i);
                 }
                 mesh.vao->bind();
                 mesh.ebo->draw(GL_TRIANGLES);

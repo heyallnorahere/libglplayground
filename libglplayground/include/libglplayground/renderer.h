@@ -25,6 +25,7 @@ namespace libplayground {
             void render();
         private:
             struct assembled_mesh {
+                std::vector<ref<texture>> textures;
                 ref<vertex_array_object> vao;
                 ref<vertex_buffer_object> vbo;
                 ref<element_buffer_object> ebo;
