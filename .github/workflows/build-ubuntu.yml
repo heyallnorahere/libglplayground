@@ -12,7 +12,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get update
-          sudo apt-get install libgl1-mesa-dev cmake libxrandr libxinerama-dev libxcursor-dev libxi-dev
+          sudo apt-get install libgl1-mesa-dev cmake libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
       - name: configure cmake
         shell: bash
         run: |
