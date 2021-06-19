@@ -1,0 +1,23 @@
+name: build-ubuntu
+on: [ push ]
+jobs:
+  build-cmake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: install dependencies
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install libgl1-mesa-dev cmake libxrandr libxinerama-dev libxcursor-dev libxi-dev
+      - name: configure cmake
+        shell: bash
+        run: |
+          cmake ${{ github.workspace }} -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=Release
+      - name: build!
+        shell: bash
+        run: |
+          make -C ${{ github.workspace }}/build -j 8
