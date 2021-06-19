@@ -11,14 +11,18 @@ namespace libplayground {
             spdlog::info("Starting application " + this->m_title + "...");
             this->load_content();
             while (!this->m_window->should_window_close()) {
-                // todo: update
+                this->update();
                 this->m_window->clear();
-                // todo: render
+                this->render();
                 this->m_window->swap_buffers();
                 this->m_window->poll_events();
             }
             this->unload_content();
             spdlog::info("Shutting down...");
         }
+        void application::load_content() { }
+        void application::unload_content() { }
+        void application::update() { }
+        void application::render() { }
     }
 }
