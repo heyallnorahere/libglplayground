@@ -1,0 +1,15 @@
+# output directories
+bin/
+bin-int/
+build/
+
+# project files
+Makefile
+*.make
+*.sln
+*.*proj*
+*.xc*
+
+# ide settings
+.vs/
+.vscode/

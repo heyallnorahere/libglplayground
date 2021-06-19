@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+file(GLOB_RECURSE CPP_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+file(GLOB_RECURSE H_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+set(MANIFEST ${CPP_SOURCE_FILES} ${H_HEADER_FILES})
+add_executable(basic-usage ${MANIFEST})
+target_link_libraries(basic-usage libglplayground)
+set_property(TARGET basic-usage PROPERTY CXX_STANDARD 17)
