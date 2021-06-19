@@ -13,7 +13,7 @@ namespace basic_usage {
     };
     class basic_usage_app : public application {
     public:
-        basic_usage_app() : application("basic-usage", 800, 600, major_opengl_version) { }
+        basic_usage_app() : application("Example application", 800, 600, major_opengl_version) { }
     protected:
         virtual void load_content() override {
             std::vector<vertex_attribute> attributes = {

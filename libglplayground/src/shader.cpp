@@ -72,5 +72,29 @@ namespace libplayground {
         GLuint shader::get() {
             return this->m_id;
         }
+        void shader::uniform_int(const std::string& name, GLint value) {
+            glUniform1i(this->get_uniform_location(name), value);
+        }
+        void shader::uniform_uint(const std::string& name, GLuint value) {
+            glUniform1ui(this->get_uniform_location(name), value);
+        }
+        void shader::uniform_float(const std::string& name, GLfloat value) {
+            glUniform1f(this->get_uniform_location(name), value);
+        }
+        void shader::uniform_vec2(const std::string& name, const glm::vec2& value) {
+            glUniform2f(this->get_uniform_location(name), value.x, value.y);
+        }
+        void shader::uniform_vec3(const std::string& name, const glm::vec3& value) {
+            glUniform3f(this->get_uniform_location(name), value.x, value.y, value.z);
+        }
+        void shader::uniform_vec4(const std::string& name, const glm::vec4& value) {
+            glUniform4f(this->get_uniform_location(name), value.x, value.y, value.z, value.w);
+        }
+        void shader::uniform_mat4(const std::string& name, const glm::mat4& value, bool transpose) {
+            glUniformMatrix4fv(this->get_uniform_location(name), 1, transpose, glm::value_ptr(value));
+        }
+        GLint shader::get_uniform_location(const std::string& name) {
+            return glGetUniformLocation(this->m_id, name.c_str());
+        }
     }
 }

@@ -53,6 +53,7 @@ namespace libplayground {
                 glDebugMessageCallback(opengl_debug_callback, nullptr);
                 glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
             }
+            glEnable(GL_DEPTH_TEST);
             spdlog::info("Successfully created window and OpenGL context!");
             spdlog::info("\tWidth: " + std::to_string(this->m_width));
             spdlog::info("\tHeight: " + std::to_string(this->m_height));
@@ -81,7 +82,7 @@ namespace libplayground {
             return glfwWindowShouldClose(this->m_window);
         }
         void window::clear() {
-            glClear(GL_COLOR_BUFFER_BIT); // todo: add more flags later
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
         void window::swap_buffers() {
             glfwSwapBuffers(this->m_window);
