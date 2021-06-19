@@ -13,6 +13,7 @@
 #include "libglplayground/vertex_buffer_object.h"
 #include "libglplayground/element_buffer_object.h"
 #include "libglplayground/shader.h"
+#include "libglplayground/texture.h"
 
 // class for easily reading and creating shaders
 #include "libglplayground/shader_factory.h"

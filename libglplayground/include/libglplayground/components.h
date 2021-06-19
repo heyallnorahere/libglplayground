@@ -9,6 +9,7 @@ namespace libplayground {
             struct mesh_component {
                 std::vector<vertex> vertices;
                 std::vector<uint32_t> indices;
+                std::vector<ref<texture>> textures;
             };
         }
     }

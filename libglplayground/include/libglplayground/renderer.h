@@ -4,6 +4,7 @@
 #include "vertex_array_object.h"
 #include "vertex_buffer_object.h"
 #include "element_buffer_object.h"
+#include "texture.h"
 namespace libplayground {
     namespace gl {
         struct vertex {
@@ -14,6 +15,7 @@ namespace libplayground {
             glm::mat4 transform;
             std::vector<vertex> vertices;
             std::vector<uint32_t> indices;
+            std::vector<ref<texture>> textures;
         };
         class renderer : public ref_counted {
         public:

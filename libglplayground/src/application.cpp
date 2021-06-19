@@ -41,6 +41,7 @@ namespace libplayground {
                 m.transform = transform.transform;
                 m.vertices = mesh.vertices;
                 m.indices = mesh.indices;
+                m.textures = mesh.textures;
                 this->m_renderer->submit(m);
             });
         }
