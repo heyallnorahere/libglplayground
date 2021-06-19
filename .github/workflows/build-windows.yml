@@ -1,0 +1,18 @@
+name: build-windows.yml
+on: [ push ]
+jobs:
+  build-cmake:
+    runs-on: windows-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: configure cmake
+        shell: cmd
+        run: |
+          cmake ${{ github.workspace }} -B ${{ github.workspace }}/build
+      - name: build!
+        shell: cmd
+        run: |
+          "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe" build\libglplayground.sln -p:Configuration=Release -m
