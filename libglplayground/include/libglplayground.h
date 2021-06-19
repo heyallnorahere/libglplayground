@@ -5,6 +5,7 @@
 // core libglplayground headers
 #include "libglplayground/ref.h"
 #include "libglplayground/window.h"
+#include "libglplayground/renderer.h"
 #include "libglplayground/application.h"
 
 // OpenGL object implementations
@@ -15,6 +16,9 @@
 
 // class for easily reading and creating shaders
 #include "libglplayground/shader_factory.h"
+
+// every built-in component; feel free to write more!
+#include "libglplayground/components.h"
 
 // basic main implementation
 #include "libglplayground/main.h"
