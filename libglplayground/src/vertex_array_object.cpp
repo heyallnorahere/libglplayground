@@ -4,11 +4,7 @@ namespace libplayground {
     namespace gl {
         vertex_array_object::vertex_array_object(const std::vector<vertex_attribute>& attributes) {
             glGenVertexArrays(1, &this->m_id);
-            for (size_t i = 0; i < attributes.size(); i++) {
-                const auto& attrib = attributes[i];
-                glVertexAttribPointer((GLuint)i, (GLint)attrib.elements, attrib.type, attrib.normalized, (GLsizei)attrib.stride, (void*)attrib.offset);
-                glEnableVertexAttribArray((GLuint)i);
-            }
+            glBindVertexArray(this->m_id);
         }
         vertex_array_object::~vertex_array_object() {
             glDeleteVertexArrays(1, &this->m_id);
