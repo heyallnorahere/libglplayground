@@ -53,6 +53,8 @@ namespace libplayground {
                 settings s;
                 s.format = GL_RGBA; // for consistency
                 tex = ref<texture>::create(image_data, width, height, channels, s);
+            } else {
+                throw std::runtime_error("Could not load image: " + path);
             }
             return tex;
         }
