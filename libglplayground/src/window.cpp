@@ -3,6 +3,15 @@
 static uint32_t window_count = 0;
 namespace libplayground {
     namespace gl {
+        static std::map<GLFWwindow*, window*> window_map;
+        static void on_framebuffer_size(GLFWwindow* window, int32_t width, int32_t height) {
+            glfwMakeContextCurrent(window);
+            glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+            window_resize_event_args args;
+            args.new_width = width;
+            args.new_height = height;
+            window_map[window]->call_callback(window_callback_trigger::on_resize, &args);
+        }
         static void opengl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const char* message, const void* user_param) {
             switch (id) {
             case 131169:
@@ -54,6 +63,8 @@ namespace libplayground {
                 glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
             }
             glEnable(GL_DEPTH_TEST);
+            window_map[this->m_window] = this;
+            glfwSetFramebufferSizeCallback(this->m_window, on_framebuffer_size);
             spdlog::info("Successfully created window and OpenGL context!");
             spdlog::info("\tWidth: " + std::to_string(this->m_width));
             spdlog::info("\tHeight: " + std::to_string(this->m_height));
@@ -83,9 +94,21 @@ namespace libplayground {
         }
         void window::clear() {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            this->call_callback(window_callback_trigger::on_clear, nullptr);
         }
         void window::swap_buffers() {
             glfwSwapBuffers(this->m_window);
+            this->call_callback(window_callback_trigger::on_present, nullptr);
+        }
+        void window::add_callback(window_callback_trigger trigger, window_callback callback) {
+            this->m_callbacks.push_back({ trigger, callback });
+        }
+        void window::call_callback(window_callback_trigger event, void* args) {
+            for (const auto& pair : this->m_callbacks) {
+                if (pair.first == event) {
+                    pair.second(args);
+                }
+            }
         }
         void window::poll_events() {
             glfwPollEvents();

@@ -10,6 +10,7 @@
 #include <fstream>
 #include <vector>
 #include <memory>
+#include <map>
 #include <utility>
 #include <type_traits>
 #include <stdexcept>
