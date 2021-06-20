@@ -4,12 +4,10 @@ namespace libplayground {
     namespace gl {
         namespace components {
             struct transform_component {
-                glm::vec3 translation, rotation, scale;
-                transform_component() {
-                    this->translation = glm::vec3(0.f);
-                    this->rotation = glm::vec3(0.f);
-                    this->scale = glm::vec3(1.f);
-                }
+                glm::vec3 translation = glm::vec3(0.f);
+                glm::vec3 rotation = glm::vec3(0.f);
+                glm::vec3 scale = glm::vec3(1.f);
+                transform_component() = default;
                 transform_component(const transform_component&) = default;
                 transform_component(const glm::vec3& translation) {
                     this->translation = translation;
@@ -23,6 +21,8 @@ namespace libplayground {
                 std::vector<vertex> vertices;
                 std::vector<uint32_t> indices;
                 std::vector<texture_descriptor> textures;
+                mesh_component() = default;
+                mesh_component(const mesh_component&) = default;
             };
             struct camera_component {
                 glm::vec3 direction, up;
