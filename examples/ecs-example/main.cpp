@@ -82,7 +82,7 @@ namespace ecs_example {
                 this->m_registry.emplace<components::mesh_component>(entity, vertices, indices, tex);
             }
             shader_factory factory;
-            this->m_shader = factory.multiple_files("assets/shaders/vertex.glsl", "assets/shaders/fragment.glsl");
+            this->m_shader = factory.single_file("assets/shaders/ecs-example.glsl");
         }
         virtual void update() override {
             static float angle = 0.f;

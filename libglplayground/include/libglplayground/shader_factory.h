@@ -6,6 +6,7 @@ namespace libplayground {
         class shader_factory {
         public:
             ref<shader> multiple_files(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometry_path = "");
+            ref<shader> single_file(const std::string& path);
         };
     }
 }

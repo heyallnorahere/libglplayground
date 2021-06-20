@@ -74,7 +74,7 @@ namespace _3d_demo {
             this->m_ebo = ref<element_buffer_object>::create(indices);
             this->m_vao->add_vertex_attributes(attributes);
             shader_factory factory;
-            this->m_shader = factory.multiple_files("shaders/vertex.glsl", "shaders/fragment.glsl");
+            this->m_shader = factory.single_file("assets/shaders/3d-demo.glsl");
         }
         virtual void update() override {
             static float angle = 0.f;

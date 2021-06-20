@@ -1,3 +1,4 @@
+#shader vertex
 #version 330 core
 layout(location = 0) in vec3 pos;
 layout(location = 1) in vec3 color;
@@ -8,4 +9,12 @@ uniform mat4 model;
 void main() {
     gl_Position = projection * view * model * vec4(pos, 1.0);
     frag_color_input = color;
+}
+#shader fragment
+#version 330 core
+out vec4 out_color;
+in vec3 frag_color_input;
+void main() {
+    // i could do something interesting, or i could be lazy, and i decided to go with lazy
+    out_color = vec4(frag_color_input, 1.0);
 }
