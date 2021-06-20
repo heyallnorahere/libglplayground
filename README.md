@@ -1,4 +1,4 @@
-# libglplayground [![License](https://img.shields.io/github/license/yodasoda1219/libglplayground)](https://github.com/yodasoda1219/libglplayground/blob/main/LICENSE) ![GitHub repo size](https://img.shields.io/github/repo-size/yodasoda1219/libglplayground)
+# libglplayground [![license](https://img.shields.io/github/license/yodasoda1219/libglplayground)](https://github.com/yodasoda1219/libglplayground/blob/main/LICENSE) ![repo size](https://img.shields.io/github/repo-size/yodasoda1219/libglplayground)
 
 ## About
 
@@ -12,8 +12,8 @@ This project currently runs on [CMake](https://cmake.org). Once I get a release 
 
 | System  | Status |
 | ---     | ---    |
-| Ubuntu  | [![build-ubuntu](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-ubuntu.yml)    |
-| Windows | [![build-windows](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-windows.yml/badge.svg)](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-windows.yml) |
+| Ubuntu  | [![build-ubuntu](https://img.shields.io/github/workflow/status/yodasoda1219/libglplayground/build-ubuntu)](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-ubuntu.yml)    |
+| Windows | [![build-windows](https://img.shields.io/github/workflow/status/yodasoda1219/libglplayground/build-windows)](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-windows.yml) |
 
 ## How do I use this?
 
