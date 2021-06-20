@@ -1,0 +1,46 @@
+{
+    "outputPath": "libglplayground.zip",
+    "entries": [
+        {
+            "type": "file",
+            "source": "build/examples/basic-usage/basic-usage",
+            "destination": "examples/basic-usage"
+        },
+        {
+            "type": "file",
+            "source": "build/examples/3d-demo/3d-demo",
+            "destination": "examples/3d-demo"
+        },
+        {
+            "type": "file",
+            "source": "build/examples/ecs-example/ecs-example",
+            "destination": "examples/ecs-example"
+        },
+        {
+            "type": "directory",
+            "source": "build/examples/basic-usage/assets",
+            "destination": "examples/assets"
+        },
+        {
+            "type": "directory",
+            "source": "build/examples/3d-demo/assets",
+            "destination": "examples/assets"
+        },
+        {
+            "type": "directory",
+            "source": "build/examples/ecs-example/assets",
+            "destination": "examples/assets"
+        },
+        {
+            "type": "file",
+            "source": "build/libglplayground/libglplayground.a",
+            "destination": "libglplayground/lib/libglplayground.a"
+        },
+        {
+            "type": "directory",
+            "source": "libglplayground/include",
+            "destination": "libglplayground/include"
+        }
+    ],
+    "variables": []
+}

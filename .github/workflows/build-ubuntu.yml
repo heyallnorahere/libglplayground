@@ -12,7 +12,12 @@ jobs:
         shell: bash
         run: |
           sudo apt-get update
-          sudo apt-get install libgl1-mesa-dev cmake libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+          sudo apt-get install -y libgl1-mesa-dev cmake libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+      - name: setup node
+        shell: bash
+        run: |
+          curl -fsSL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+          sudo apt-get install -y nodejs
       - name: configure cmake
         shell: bash
         run: |
@@ -21,3 +26,13 @@ jobs:
         shell: bash
         run: |
           make -C ${{ github.workspace }}/build -j 8
+      - name: package
+        id: package
+        uses: yodasoda1219/create-package@v2.1
+        with:
+          config: artifacts/unix.json
+      - name: upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-build
+          path: ${{ steps.package.outputs.path }}

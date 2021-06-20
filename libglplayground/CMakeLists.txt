@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.16)
 file(GLOB_RECURSE H_HEADER_FILES "*.h")
 file(GLOB_RECURSE CPP_SOURCE_FILES "src/*.cpp")
 set(MANIFEST ${H_HEADER_FILES} ${CPP_SOURCE_FILES})
