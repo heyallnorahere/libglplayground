@@ -6,6 +6,8 @@
 #include "libglplayground/ref.h"
 #include "libglplayground/window.h"
 #include "libglplayground/renderer.h"
+#include "libglplayground/entity.h"
+#include "libglplayground/scene.h"
 #include "libglplayground/application.h"
 
 // OpenGL object implementations

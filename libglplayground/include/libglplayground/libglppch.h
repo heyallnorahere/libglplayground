@@ -17,5 +17,6 @@
 #include <utility>
 #include <type_traits>
 #include <stdexcept>
+#include <typeinfo>
 #include <cstdint>
 #include <stddef.h> // for ::size_t

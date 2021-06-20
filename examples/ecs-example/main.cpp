@@ -74,15 +74,13 @@ namespace ecs_example {
             };
             for (size_t i = 0; i < positions.size(); i++) {
                 glm::vec3 pos = positions[i];
-                auto entity = this->m_registry.create();
-                glm::mat4 transform(1.f);
-                this->m_registry.emplace<components::transform_component>(entity).translation = pos;
+                auto entity = this->m_scene->create();
+                entity.get_component<components::transform_component>().translation = pos;
                 std::vector<texture_descriptor> tex = { { { textures[i % textures.size()] }, "tex" } };
-                this->m_registry.emplace<components::mesh_component>(entity, vertices, indices, tex);
+                entity.add_component<components::mesh_component>(vertices, indices, tex);
             }
-            this->m_camera = this->m_registry.create();
-            this->m_registry.emplace<components::transform_component>(this->m_camera);
-            this->m_registry.emplace<components::camera_component>(this->m_camera);
+            this->m_camera = this->m_scene->create();
+            this->m_camera.add_component<components::camera_component>();
             shader_factory factory;
             this->m_shader = factory.single_file("assets/shaders/ecs-example.glsl");
         }
@@ -92,9 +90,9 @@ namespace ecs_example {
             float factor = 5.f;
             float x = cos(glm::radians(angle)) * factor;
             float z = sin(glm::radians(angle)) * factor;
-            auto& transform = this->m_registry.get<components::transform_component>(this->m_camera);
+            auto& transform = this->m_camera.get_component<components::transform_component>();
             transform.translation = glm::vec3(x, 0.f, z);
-            auto& camera = this->m_registry.get<components::camera_component>(this->m_camera);
+            auto& camera = this->m_camera.get_component<components::camera_component>();
             camera.direction = glm::normalize(-transform.translation);
         }
         virtual void render() override {
@@ -102,7 +100,7 @@ namespace ecs_example {
         }
     private:
         ref<shader> m_shader;
-        entt::entity m_camera;
+        entity m_camera;
     };
     ref<application> get_application_instance() {
         return ref<ecs_example_app>::create();
