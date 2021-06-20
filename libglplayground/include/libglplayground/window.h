@@ -26,6 +26,7 @@ namespace libplayground {
             void call_callback(window_callback_trigger event, void* args);
             static void poll_events();
         private:
+            static void on_framebuffer_size(GLFWwindow* window, int32_t width, int32_t height);
             std::vector<std::pair<window_callback_trigger, window_callback>> m_callbacks;
             GLFWwindow* m_window;
             std::string m_title;

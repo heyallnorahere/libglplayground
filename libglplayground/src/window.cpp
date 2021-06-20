@@ -4,14 +4,6 @@ static uint32_t window_count = 0;
 namespace libplayground {
     namespace gl {
         static std::map<GLFWwindow*, window*> window_map;
-        static void on_framebuffer_size(GLFWwindow* window, int32_t width, int32_t height) {
-            glfwMakeContextCurrent(window);
-            glViewport(0, 0, (GLsizei)width, (GLsizei)height);
-            window_resize_event_args args;
-            args.new_width = width;
-            args.new_height = height;
-            window_map[window]->call_callback(window_callback_trigger::on_resize, &args);
-        }
         static void opengl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const char* message, const void* user_param) {
             switch (id) {
             case 131169:
@@ -112,6 +104,19 @@ namespace libplayground {
         }
         void window::poll_events() {
             glfwPollEvents();
+        }
+        void window::on_framebuffer_size(GLFWwindow* window, int32_t width, int32_t height) {
+            glfwMakeContextCurrent(window);
+            // to preserve the aspect ratio, divide the new height by the old height, and the new width is the old width multiplied by the quotient
+            auto w = window_map[window];
+            float scale = (float)height / (float)w->m_height;
+            w->m_height = height;
+            w->m_width *= scale;
+            glViewport(((GLint)width - (GLint)w->m_width) / 2, 0, (GLsizei)w->m_width, (GLsizei)w->m_height);
+            window_resize_event_args args;
+            args.new_width = w->m_width;
+            args.new_height = w->m_height;
+            w->call_callback(window_callback_trigger::on_resize, &args);
         }
     }
 }
