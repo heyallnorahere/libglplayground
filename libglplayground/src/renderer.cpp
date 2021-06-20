@@ -14,6 +14,9 @@ namespace libplayground {
         void renderer::set_shader(ref<shader> shader) {
             this->m_shader = shader;
         }
+        ref<shader> renderer::get_shader() {
+            return this->m_shader;
+        }
         void renderer::submit(const mesh& m) {
             assembled_mesh assembled;
             assembled.transform = m.transform;
@@ -34,7 +37,11 @@ namespace libplayground {
                     this->m_shader->uniform_mat4("model", mesh.transform);
                 }
                 for (size_t i = 0; i < mesh.textures.size(); i++) {
-                    mesh.textures[i]->bind((uint32_t)i);
+                    auto& desc = mesh.textures[i];
+                    desc.data->bind((uint32_t)i);
+                    if (this->m_shader && !desc.uniform_name.empty()) {
+                        this->m_shader->uniform_int(desc.uniform_name, (GLint)i);
+                    }
                 }
                 mesh.vao->bind();
                 mesh.ebo->draw(GL_TRIANGLES);

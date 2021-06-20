@@ -76,33 +76,33 @@ namespace ecs_example {
                 glm::vec3 pos = positions[i];
                 auto entity = this->m_registry.create();
                 glm::mat4 transform(1.f);
-                transform = glm::translate(transform, pos);
-                this->m_registry.emplace<components::transform_component>(entity, transform);
-                std::vector<ref<texture>> tex = { textures[i % textures.size()] };
+                this->m_registry.emplace<components::transform_component>(entity).translation = pos;
+                std::vector<texture_descriptor> tex = { { { textures[i % textures.size()] }, "tex" } };
                 this->m_registry.emplace<components::mesh_component>(entity, vertices, indices, tex);
             }
+            this->m_camera = this->m_registry.create();
+            this->m_registry.emplace<components::transform_component>(this->m_camera);
+            this->m_registry.emplace<components::camera_component>(this->m_camera);
             shader_factory factory;
             this->m_shader = factory.single_file("assets/shaders/ecs-example.glsl");
         }
         virtual void update() override {
             static float angle = 0.f;
             angle += 1.f;
-            float aspect_ratio = (float)this->m_window->get_width() / (float)this->m_window->get_height();
-            this->m_projection = glm::perspective(glm::radians(45.f), aspect_ratio, 0.1f, 100.f);
             float factor = 5.f;
             float x = cos(glm::radians(angle)) * factor;
             float z = sin(glm::radians(angle)) * factor;
-            this->m_view = glm::lookAt(glm::vec3(x, 0.f, z), glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
+            auto& transform = this->m_registry.get<components::transform_component>(this->m_camera);
+            transform.translation = glm::vec3(x, 0.f, z);
+            auto& camera = this->m_registry.get<components::camera_component>(this->m_camera);
+            camera.direction = glm::normalize(-transform.translation);
         }
         virtual void render() override {
-            this->m_shader->bind();
             this->m_renderer->set_shader(this->m_shader);
-            this->m_shader->uniform_mat4("projection", this->m_projection);
-            this->m_shader->uniform_mat4("view", this->m_view);
         }
     private:
         ref<shader> m_shader;
-        glm::mat4 m_projection, m_view;
+        entt::entity m_camera;
     };
     ref<application> get_application_instance() {
         return ref<ecs_example_app>::create();
