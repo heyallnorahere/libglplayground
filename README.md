@@ -14,3 +14,7 @@ This project currently runs on [CMake](https://cmake.org). Once I get a release 
 | ---     | ---    |
 | Ubuntu  | [![build-ubuntu](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-ubuntu.yml)    |
 | Windows | [![build-windows](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-windows.yml/badge.svg)](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-windows.yml) |
+
+## How do I use this?
+
+See the [examples folder](examples/).
