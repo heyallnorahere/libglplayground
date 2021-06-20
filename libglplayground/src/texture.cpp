@@ -51,7 +51,6 @@ namespace libplayground {
                 std::vector<uint8_t> image_data(static_cast<size_t>(width * height * channels));
                 memcpy(image_data.data(), data, width * height * channels * sizeof(uint8_t)); // todo: not this
                 settings s;
-                s.format = GL_RGBA; // for consistency
                 tex = ref<texture>::create(image_data, width, height, channels, s);
             } else {
                 throw std::runtime_error("Could not load image: " + path);
