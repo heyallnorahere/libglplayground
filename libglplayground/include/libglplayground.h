@@ -20,6 +20,9 @@
 // class for easily reading and creating shaders
 #include "libglplayground/shader_factory.h"
 
+// assimp-imported models
+#include "libglplayground/model.h"
+
 // every built-in component; feel free to write more!
 #include "libglplayground/components.h"
 

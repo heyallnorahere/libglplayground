@@ -17,6 +17,7 @@
 #include <vector>
 #include <memory>
 #include <map>
+#include <unordered_map>
 #include <utility>
 #include <type_traits>
 #include <stdexcept>
