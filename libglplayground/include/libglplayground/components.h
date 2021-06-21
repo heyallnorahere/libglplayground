@@ -12,6 +12,7 @@ namespace libplayground {
                 transform_component(const glm::vec3& translation) {
                     this->translation = translation;
                 }
+                transform_component& operator=(const transform_component&) = default;
                 glm::mat4 get_matrix() {
                     glm::mat4 rotation = glm::toMat4(glm::quat(this->rotation));
                     return glm::translate(glm::mat4(1.f), this->translation) * rotation * glm::scale(glm::mat4(1.f), this->scale);
@@ -23,6 +24,7 @@ namespace libplayground {
                 std::vector<texture_descriptor> textures;
                 mesh_component() = default;
                 mesh_component(const mesh_component&) = default;
+                mesh_component& operator=(const mesh_component&) = default;
             };
             struct camera_component {
                 glm::vec3 direction, up;
@@ -33,6 +35,7 @@ namespace libplayground {
                     this->primary = true;
                 }
                 camera_component(const camera_component&) = default;
+                camera_component& operator=(const camera_component&) = default;
             };
         }
     }

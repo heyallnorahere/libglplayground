@@ -10,6 +10,7 @@ namespace libplayground {
                 this->m_scene = scene_;
             }
             entity(const entity&) = default;
+            entity& operator=(const entity&) = default;
             // templated functions involving "scene" will be in scene.h
             template<typename T, typename... Args> T& add_component(Args&&... args);
             template<typename T> T& get_component();

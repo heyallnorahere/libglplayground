@@ -1,4 +1,4 @@
-# libglplayground [![license](https://img.shields.io/github/license/yodasoda1219/libglplayground)](https://github.com/yodasoda1219/libglplayground/blob/main/LICENSE) ![repo size](https://img.shields.io/github/repo-size/yodasoda1219/libglplayground)
+# libglplayground [![License](https://img.shields.io/github/license/yodasoda1219/libglplayground)](https://github.com/yodasoda1219/libglplayground/blob/main/LICENSE) ![GitHub Repo size](https://img.shields.io/github/repo-size/yodasoda1219/libglplayground) ![LGTM Alerts](https://img.shields.io/lgtm/alerts/github/yodasoda1219/libglplayground) ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/yodasoda1219/libglplayground)
 
 ## About
 

@@ -49,7 +49,7 @@ namespace libplayground {
             ref<texture> tex;
             if (data) {
                 std::vector<uint8_t> image_data(static_cast<size_t>(width * height * channels));
-                memcpy(image_data.data(), data, width * height * channels * sizeof(uint8_t)); // todo: not this
+                memcpy(image_data.data(), data, (size_t)width * (size_t)height * (size_t)channels * sizeof(uint8_t)); // todo: not this
                 settings s;
                 tex = ref<texture>::create(image_data, width, height, channels, s);
             } else {
