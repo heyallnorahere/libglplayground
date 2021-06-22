@@ -160,5 +160,29 @@ namespace libplayground {
             this->m_ebo = ref<element_buffer_object>::create(indices);
             this->m_vao->unbind();
         }
+        std::vector<animated_mesh>& model::get_meshes() {
+            return this->m_meshes;
+        }
+        const std::vector<animated_mesh>& model::get_meshes() const {
+            return this->m_meshes;
+        }
+        const std::vector<vertex>& model::get_static_vertices() const {
+            return this->m_static_vertices;
+        }
+        const std::vector<index>& model::get_indices() const {
+            return this->m_indices;
+        }
+        ref<shader> model::get_mesh_shader() {
+            return this->m_shader;
+        }
+        std::vector<ref<texture>>& model::get_textures() {
+            return this->m_textures;
+        }
+        const std::vector<ref<texture>>& model::get_textures() const {
+            return this->m_textures;
+        }
+        const std::string& model::get_file_path() const {
+            return this->m_file_path;
+        }
     }
 }

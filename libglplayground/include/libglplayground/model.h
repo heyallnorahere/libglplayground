@@ -48,8 +48,6 @@ namespace libplayground {
         class model : public ref_counted {
         public:
             model(const std::string& path);
-            model(const std::vector<vertex>& vertices, const std::vector<index>& indices, glm::mat4& transform);
-            ~model();
             model(const model&) = delete;
             model& operator=(const model&) = delete;
             std::vector<animated_mesh>& get_meshes();
