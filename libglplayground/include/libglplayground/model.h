@@ -24,9 +24,24 @@ namespace libplayground {
         };
         struct index {
             uint32_t v1, v2, v3;
+            uint32_t& operator[](size_t index) {
+                switch (index) {
+                case 0:
+                    return this->v1;
+                    break;
+                case 1:
+                    return this->v2;
+                    break;
+                case 2:
+                    return this->v3;
+                    break;
+                default:
+                    throw std::runtime_error("Index out of range!");
+                }
+            }
         };
         struct animated_mesh {
-            uint32_t base_vertex, base_index, texture_index, index_count, vertex_count;
+            uint32_t base_vertex, base_index, material_index, index_count, vertex_count;
             glm::mat4 transform = glm::mat4(1.f);
             std::string node_name, mesh_name;
         };
@@ -68,14 +83,17 @@ namespace libplayground {
             ref<vertex_array_object> m_vao;
             ref<vertex_buffer_object> m_vbo;
             ref<element_buffer_object> m_ebo;
-            std::vector<vertex> m_vertices;
+            std::vector<vertex> m_static_vertices;
             std::vector<animated_vertex> m_animated_vertices;
             std::vector<index> m_indices;
             std::unordered_map<std::string, uint32_t> m_bone_map;
             std::unordered_map<aiNode*, std::vector<uint32_t>> m_node_map;
+            std::vector<glm::mat4> m_bone_transforms;
+            const aiScene* m_scene;
             ref<shader> m_shader;
             std::vector<ref<texture>> m_textures;
             std::string m_file_path;
+            bool m_is_animated;
         };
     }
 }
