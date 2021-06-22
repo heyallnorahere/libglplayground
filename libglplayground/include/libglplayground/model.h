@@ -1,5 +1,6 @@
 #pragma once
 #include "ref.h"
+// Huge credit goes to The Cherno (https://github.com/TheCherno) and his game engine for providing an example for skeletal animation.
 namespace libplayground {
     namespace gl {
         struct vertex; // from renderer.h
