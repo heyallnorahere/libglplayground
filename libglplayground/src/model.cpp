@@ -23,6 +23,9 @@ namespace libplayground {
             }
             return result;
         }
+        static glm::quat from_assimp_quaternion(const aiQuaternion& quat) {
+            return glm::quat(quat.w, quat.x, quat.y, quat.z);
+        }
         static constexpr uint32_t model_import_flags =
             aiProcess_Triangulate |
             aiProcess_FlipUVs |
@@ -180,41 +183,134 @@ namespace libplayground {
             return this->m_file_path;
         }
         void model::bone_transform(float time) {
-            // todo: implement
+            this->read_node_hierarchy(time, this->m_scene->mRootNode, glm::mat4(1.f));
+            this->m_bone_transforms.resize(this->m_bone_count);
+            for (size_t i = 0; i < (size_t)this->m_bone_count; i++) {
+                this->m_bone_transforms[i] = this->m_bone_info[i].final_transform;
+            }
         }
         void model::read_node_hierarchy(float animation_time, const aiNode* node, const glm::mat4& parent_transform) {
-            // todo: implement
+            std::string name = std::string(node->mName.C_Str());
+            const aiAnimation* animation = this->m_scene->mAnimations[0]; // first animation for now; todo: add animation id parameter
+            glm::mat4 node_transform = from_assimp_matrix(node->mTransformation);
+            const aiNodeAnim* node_animation = this->find_node_animation(animation, name);
+            if (node_animation) {
+                glm::vec3 translation = this->interpolate_translation(animation_time, node_animation);
+                glm::mat4 translation_matrix = glm::translate(glm::mat4(1.f), translation);
+                glm::quat rotation = this->interpolate_rotation(animation_time, node_animation);
+                glm::mat4 rotation_matrix = glm::toMat4(rotation);
+                glm::vec3 scale = this->interpolate_scale(animation_time, node_animation);
+                glm::mat4 scale_matrix = glm::scale(glm::mat4(1.f), scale);
+                node_transform = translation_matrix * rotation_matrix * scale_matrix;
+            }
+            glm::mat4 transform = parent_transform * node_transform;
+            if (this->m_bone_map.find(name) != this->m_bone_map.end()) {
+                uint32_t bone_index = this->m_bone_map[name];
+                bone_info& bi = this->m_bone_info[(size_t)bone_index];
+                bi.final_transform = this->m_inverse_transform * transform * bi.bone_offset;
+            }
+            for (uint32_t i = 0; i < node->mNumChildren; i++) {
+                this->read_node_hierarchy(animation_time, node->mChildren[i], transform);
+            }
         }
         void model::traverse_nodes(aiNode* node, const glm::mat4& parent_transform, uint32_t level) {
-            // todo: implement
+            glm::mat4 transform = parent_transform * from_assimp_matrix(node->mTransformation);
+            this->m_node_map[node].resize(node->mNumMeshes);
+            for (uint32_t i = 0; i < node->mNumMeshes; i++) {
+                uint32_t mesh = node->mMeshes[i];
+                auto& mesh_ = this->m_meshes[mesh];
+                mesh_.node_name = std::string(node->mName.C_Str());
+                mesh_.transform = transform;
+                this->m_node_map[node][i] = mesh;
+            }
+            for (uint32_t i = 0; i < node->mNumChildren; i++) {
+                this->traverse_nodes(node->mChildren[i], transform, level + 1);
+            }
         }
         const aiNodeAnim* model::find_node_animation(const aiAnimation* animation, const std::string& node_name) {
-            // todo: implement
+            for (uint32_t i = 0; i < animation->mNumChannels; i++) {
+                const aiNodeAnim* node_animation = animation->mChannels[i];
+                if (std::string(node_animation->mNodeName.C_Str()) == node_name) {
+                    return node_animation;
+                }
+            }
             return nullptr;
         }
         uint32_t model::find_position(float animation_time, const aiNodeAnim* node_animation) {
-            // todo: implement
+            for (uint32_t i = 0; i < node_animation->mNumPositionKeys - 1; i++) {
+                if (animation_time < (float)node_animation->mPositionKeys[i + 1].mTime) {
+                    return i;
+                }
+            }
             return 0;
         }
         uint32_t model::find_rotation(float animation_time, const aiNodeAnim* node_animation) {
-            // todo: implement
+            for (uint32_t i = 0; i < node_animation->mNumRotationKeys - 1; i++) {
+                if (animation_time < (float)node_animation->mRotationKeys[i + 1].mTime) {
+                    return i;
+                }
+            }
             return 0;
         }
         uint32_t model::find_scale(float animation_time, const aiNodeAnim* node_animation) {
-            // todo: implement
+            for (uint32_t i = 0; i < node_animation->mNumScalingKeys - 1; i++) {
+                if (animation_time < (float)node_animation->mScalingKeys[i + 1].mTime) {
+                    return i;
+                }
+            }
             return 0;
         }
         glm::vec3 model::interpolate_translation(float animation_time, const aiNodeAnim* node_animation) {
-            // todo: implement
-            return glm::vec3(0.f);
+            if (node_animation->mNumPositionKeys <= 1) {
+                return from_assimp_vector<3>(node_animation->mPositionKeys[0].mValue);
+            }
+            uint32_t position_index = this->find_position(animation_time, node_animation);
+            uint32_t next_position_index = position_index + 1;
+            float delta_time = (float)(node_animation->mPositionKeys[next_position_index].mTime - node_animation->mPositionKeys[position_index].mTime);
+            float factor = (delta_time - (float)node_animation->mPositionKeys[position_index].mTime) / delta_time;
+            if (factor > 1.f) {
+                throw std::runtime_error("Factor must be below 1!");
+            }
+            factor = glm::clamp(factor, 0.f, 1.f);
+            const auto& start = node_animation->mPositionKeys[position_index].mValue;
+            const auto& end = node_animation->mPositionKeys[next_position_index].mValue;
+            auto delta = end - start;
+            return from_assimp_vector<3>(start + factor * delta);
         }
         glm::quat model::interpolate_rotation(float animation_time, const aiNodeAnim* node_animation) {
-            // todo: implement
-            return glm::quat();
+            if (node_animation->mNumRotationKeys <= 1) {
+                return from_assimp_quaternion(node_animation->mRotationKeys[0].mValue);
+            }
+            uint32_t rotation_index = this->find_rotation(animation_time, node_animation);
+            uint32_t next_rotation_index = rotation_index + 1;
+            float delta_time = (float)(node_animation->mRotationKeys[next_rotation_index].mTime - node_animation->mRotationKeys[rotation_index].mTime);
+            float factor = (delta_time - (float)node_animation->mRotationKeys[rotation_index].mTime) / delta_time;
+            if (factor > 1.f) {
+                throw std::runtime_error("Factor must be below 1!");
+            }
+            factor = glm::clamp(factor, 0.f, 1.f);
+            const auto& start = node_animation->mRotationKeys[rotation_index].mValue;
+            const auto& end = node_animation->mRotationKeys[next_rotation_index].mValue;
+            aiQuaternion q;
+            aiQuaternion::Interpolate(q, start, end, factor);
+            return from_assimp_quaternion(q.Normalize());
         }
         glm::vec3 model::interpolate_scale(float animation_time, const aiNodeAnim* node_animation) {
-            // todo: implement
-            return glm::vec3(0.f);
+            if (node_animation->mNumScalingKeys <= 1) {
+                return from_assimp_vector<3>(node_animation->mScalingKeys[0].mValue);
+            }
+            uint32_t scale_index = this->find_scale(animation_time, node_animation);
+            uint32_t next_scale_index = scale_index + 1;
+            float delta_time = (float)(node_animation->mScalingKeys[next_scale_index].mTime - node_animation->mScalingKeys[scale_index].mTime);
+            float factor = (delta_time - (float)node_animation->mScalingKeys[scale_index].mTime) / delta_time;
+            if (factor > 1.f) {
+                throw std::runtime_error("Factor must be below 1!");
+            }
+            factor = glm::clamp(factor, 0.f, 1.f);
+            const auto& start = node_animation->mScalingKeys[scale_index].mValue;
+            const auto& end = node_animation->mScalingKeys[next_scale_index].mValue;
+            auto delta = end - start;
+            return from_assimp_vector<3>(start + factor * delta);
         }
     }
 }
