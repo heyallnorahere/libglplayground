@@ -19,7 +19,7 @@ namespace libplayground {
         template<size_t L, typename T> static glm::vec<L, float> from_assimp_vector(const T& vector) {
             glm::vec<L, float> result;
             for (size_t i = 0; i < L; i++) {
-                result[i] = vector[i];
+                result[(glm::vec<L, float>::length_type)i] = vector[(uint32_t)i];
             }
             return result;
         }
@@ -182,18 +182,67 @@ namespace libplayground {
         const std::string& model::get_file_path() const {
             return this->m_file_path;
         }
-        void model::bone_transform(float time) {
-            this->read_node_hierarchy(time, this->m_scene->mRootNode, glm::mat4(1.f));
+        uint32_t model::get_animation_count() const {
+            return this->m_scene->mNumAnimations;
+        }
+        int32_t model::find_animation_by_name(const std::string& name) const {
+            if (this->m_is_animated) {
+                for (uint32_t i = 0; i < this->m_scene->mNumAnimations; i++) {
+                    const aiAnimation* animation = this->m_scene->mAnimations[i];
+                    if (std::string(animation->mName.C_Str()) == name) {
+                        return (int32_t)i;
+                    }
+                }
+            }
+            return -1;
+        }
+        float model::get_animation_length(uint32_t index) const {
+            if (this->m_is_animated || index < this->m_scene->mNumAnimations) {
+                const aiAnimation* animation = this->m_scene->mAnimations[index];
+                return static_cast<float>(animation->mDuration / (animation->mTicksPerSecond != 0.0 ? animation->mTicksPerSecond : 25.0));
+            }
+            return 0.f;
+        }
+        void model::draw(int32_t animation_index, float animation_time) {
+            this->m_shader->bind();
+            if (this->m_is_animated) {
+                float time = 0.f;
+                if (animation_index != -1 && this->m_is_animated) {
+                    const aiAnimation* animation = this->m_scene->mAnimations[animation_index];
+                    float ticks_per_second = static_cast<float>(animation->mTicksPerSecond != 0.0 ? animation->mTicksPerSecond : 25.0);
+                    float time_in_ticks = animation_time * ticks_per_second;
+                    time = fmod(time_in_ticks, (float)animation->mDuration);
+                }
+                // todo: calculate bones only once per entity per frame
+                this->bone_transform(time, animation_index);
+                for (size_t i = 0; i < this->m_bone_info.size(); i++) {
+                    std::string uniform_name = "bones[" + std::to_string(i) + "]";
+                    glm::mat4 matrix = this->m_bone_info[i].final_transform;
+                    this->m_shader->uniform_mat4(uniform_name, matrix);
+                }
+            }
+            this->m_vao->bind();
+            this->m_ebo->draw(GL_TRIANGLES);
+            this->m_vao->unbind();
+        }
+        void model::bone_transform(float time, int32_t animation_index) {
+            this->read_node_hierarchy(time, this->m_scene->mRootNode, glm::mat4(1.f), animation_index);
             this->m_bone_transforms.resize(this->m_bone_count);
             for (size_t i = 0; i < (size_t)this->m_bone_count; i++) {
                 this->m_bone_transforms[i] = this->m_bone_info[i].final_transform;
             }
         }
-        void model::read_node_hierarchy(float animation_time, const aiNode* node, const glm::mat4& parent_transform) {
+        void model::read_node_hierarchy(float animation_time, const aiNode* node, const glm::mat4& parent_transform, int32_t animation_index) {
             std::string name = std::string(node->mName.C_Str());
-            const aiAnimation* animation = this->m_scene->mAnimations[0]; // first animation for now; todo: add animation id parameter
+            const aiAnimation* animation = nullptr;
+            if (animation_index != -1) {
+                animation = this->m_scene->mAnimations[animation_index];
+            }
             glm::mat4 node_transform = from_assimp_matrix(node->mTransformation);
-            const aiNodeAnim* node_animation = this->find_node_animation(animation, name);
+            const aiNodeAnim* node_animation = nullptr;
+            if (animation) {
+                node_animation = this->find_node_animation(animation, name);
+            }
             if (node_animation) {
                 glm::vec3 translation = this->interpolate_translation(animation_time, node_animation);
                 glm::mat4 translation_matrix = glm::translate(glm::mat4(1.f), translation);
@@ -210,7 +259,7 @@ namespace libplayground {
                 bi.final_transform = this->m_inverse_transform * transform * bi.bone_offset;
             }
             for (uint32_t i = 0; i < node->mNumChildren; i++) {
-                this->read_node_hierarchy(animation_time, node->mChildren[i], transform);
+                this->read_node_hierarchy(animation_time, node->mChildren[i], transform, animation_index);
             }
         }
         void model::traverse_nodes(aiNode* node, const glm::mat4& parent_transform, uint32_t level) {

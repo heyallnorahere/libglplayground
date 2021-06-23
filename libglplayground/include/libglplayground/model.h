@@ -59,13 +59,17 @@ namespace libplayground {
             std::vector<ref<texture>>& get_textures();
             const std::vector<ref<texture>>& get_textures() const;
             const std::string& get_file_path() const;
-            // todo: add draw function, but replace with a get_vertex_buffer, get_index_buffer, etc. functions when batch rendering comes along
+            uint32_t get_animation_count() const;
+            int32_t find_animation_by_name(const std::string& name) const;
+            float get_animation_length(uint32_t index) const;
+            void draw(int32_t animation_index = -1, float animation_time = 0.f);
+            // todo: replace with a get_vertex_buffer, get_index_buffer, etc. functions when batch rendering comes along
         private:
             struct bone_info {
                 glm::mat4 bone_offset, final_transform;
             };
-            void bone_transform(float time);
-            void read_node_hierarchy(float animation_time, const aiNode* node, const glm::mat4& parent_transform);
+            void bone_transform(float time, int32_t animation_index);
+            void read_node_hierarchy(float animation_time, const aiNode* node, const glm::mat4& parent_transform, int32_t animation_index);
             void traverse_nodes(aiNode* node, const glm::mat4& parent_transform = glm::mat4(1.f), uint32_t level = 0);
             const aiNodeAnim* find_node_animation(const aiAnimation* animation, const std::string& node_name);
             uint32_t find_position(float animation_time, const aiNodeAnim* node_animation);
