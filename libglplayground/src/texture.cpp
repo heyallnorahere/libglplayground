@@ -1,6 +1,8 @@
 #include "libglppch.h"
 #include "texture.h"
+#ifdef SHARED_ASSIMP
 #define STB_IMAGE_IMPLEMENTATION
+#endif
 #include <stb_image.h>
 namespace libplayground {
     namespace gl {

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 file(GLOB_RECURSE CPP_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE H_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-file(GLOB_RECURSE ASSETS "${CMAKE_CURRENT_SOURCE_DIR}/assets/*.*")
+file(GLOB_RECURSE SHADERS "${CMAKE_CURRENT_SOURCE_DIR}/assets/*.glsl")
 set(MANIFEST ${CPP_SOURCE_FILES} ${H_HEADER_FILES} ${SHADERS})
 add_executable(ecs-example ${MANIFEST})
 target_link_libraries(ecs-example libglplayground)

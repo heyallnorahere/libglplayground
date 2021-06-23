@@ -24,19 +24,14 @@ namespace libplayground {
             return result;
         }
         static constexpr uint32_t model_import_flags =
-            aiProcess_CalcTangentSpace |
             aiProcess_Triangulate |
-            aiProcess_SortByPType |
-            aiProcess_GenNormals |
-            aiProcess_GenUVCoords |
-            aiProcess_OptimizeMeshes |
-            aiProcess_JoinIdenticalVertices |
-            aiProcess_ValidateDataStructure;
+            aiProcess_FlipUVs |
+            aiProcess_LimitBoneWeights;
         struct log_stream : public Assimp::LogStream {
             static void initialize() {
                 if (Assimp::DefaultLogger::isNullLogger()) {
                     Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
-                    Assimp::DefaultLogger::get()->attachStream(new log_stream, Assimp::Logger::Err);
+                    Assimp::DefaultLogger::get()->attachStream(new log_stream, Assimp::Logger::Err | Assimp::Logger::Warn);
                 }
             }
             virtual void write(const char* message) override {
@@ -49,7 +44,7 @@ namespace libplayground {
             spdlog::info("Loading model from: " + this->m_file_path);
             this->m_importer = std::make_unique<Assimp::Importer>();
             this->m_scene = this->m_importer->ReadFile(this->m_file_path, model_import_flags);
-            if (this->m_scene) {
+            if (!this->m_scene || !this->m_scene->HasMeshes()) {
                 throw std::runtime_error("Could not load model from: " + this->m_file_path);
             }
             this->m_is_animated = this->m_scene->mAnimations != nullptr;
@@ -183,6 +178,43 @@ namespace libplayground {
         }
         const std::string& model::get_file_path() const {
             return this->m_file_path;
+        }
+        void model::bone_transform(float time) {
+            // todo: implement
+        }
+        void model::read_node_hierarchy(float animation_time, const aiNode* node, const glm::mat4& parent_transform) {
+            // todo: implement
+        }
+        void model::traverse_nodes(aiNode* node, const glm::mat4& parent_transform, uint32_t level) {
+            // todo: implement
+        }
+        const aiNodeAnim* model::find_node_animation(const aiAnimation* animation, const std::string& node_name) {
+            // todo: implement
+            return nullptr;
+        }
+        uint32_t model::find_position(float animation_time, const aiNodeAnim* node_animation) {
+            // todo: implement
+            return 0;
+        }
+        uint32_t model::find_rotation(float animation_time, const aiNodeAnim* node_animation) {
+            // todo: implement
+            return 0;
+        }
+        uint32_t model::find_scale(float animation_time, const aiNodeAnim* node_animation) {
+            // todo: implement
+            return 0;
+        }
+        glm::vec3 model::interpolate_translation(float animation_time, const aiNodeAnim* node_animation) {
+            // todo: implement
+            return glm::vec3(0.f);
+        }
+        glm::quat model::interpolate_rotation(float animation_time, const aiNodeAnim* node_animation) {
+            // todo: implement
+            return glm::quat();
+        }
+        glm::vec3 model::interpolate_scale(float animation_time, const aiNodeAnim* node_animation) {
+            // todo: implement
+            return glm::vec3(0.f);
         }
     }
 }
