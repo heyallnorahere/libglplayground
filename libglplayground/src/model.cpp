@@ -6,6 +6,7 @@
 #include "vertex_buffer_object.h"
 #include "element_buffer_object.h"
 #include "model.h"
+#include "shader_library.h"
 namespace libplayground {
     namespace gl {
         static glm::mat4 from_assimp_matrix(const aiMatrix4x4& matrix) {
@@ -19,7 +20,7 @@ namespace libplayground {
         template<size_t L, typename T> static glm::vec<L, float> from_assimp_vector(const T& vector) {
             glm::vec<L, float> result;
             for (size_t i = 0; i < L; i++) {
-                result[(glm::vec<L, float>::length_type)i] = vector[(uint32_t)i];
+                result[(typename glm::vec<L, float>::length_type)i] = vector[(uint32_t)i];
             }
             return result;
         }
@@ -51,6 +52,12 @@ namespace libplayground {
                 throw std::runtime_error("Could not load model from: " + this->m_file_path);
             }
             this->m_is_animated = this->m_scene->mAnimations != nullptr;
+            auto& library = shader_library::get();
+            if (this->m_is_animated) {
+                this->m_shader = library["model-animated"];
+            } else {
+                this->m_shader = library["model-static"];
+            }
             // todo: get the model shader from the shader library, when thats implemented
             this->m_inverse_transform = glm::inverse(from_assimp_matrix(this->m_scene->mRootNode->mTransformation));
             uint32_t vertex_count = 0;

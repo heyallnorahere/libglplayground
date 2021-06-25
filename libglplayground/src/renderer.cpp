@@ -1,5 +1,6 @@
 #include "libglppch.h"
 #include "renderer.h"
+#include "shader_library.h"
 namespace libplayground {
     namespace gl {
         static std::vector<vertex_attribute> attributes = {
@@ -8,14 +9,8 @@ namespace libplayground {
             { GL_FLOAT, 2, sizeof(vertex), offsetof(vertex, uv), false }
         };
         void renderer::reset() {
-            this->m_shader.reset();
+            this->m_models.clear();
             this->m_meshes.clear();
-        }
-        void renderer::set_shader(ref<shader> shader) {
-            this->m_shader = shader;
-        }
-        ref<shader> renderer::get_shader() {
-            return this->m_shader;
         }
         void renderer::submit(const mesh& m) {
             assembled_mesh assembled;
@@ -27,26 +22,36 @@ namespace libplayground {
             assembled.textures = m.textures;
             this->m_meshes.push_back(assembled);
         }
+        void renderer::submit(const model_descriptor& model) {
+            this->m_models.push_back(model);
+        }
         void renderer::render() {
             // todo: instead of rendering each object individually, start batch rendering
-            if (this->m_shader) {
-                this->m_shader->bind();
+            ref<shader> current_shader;
+            auto& library = shader_library::get();
+            std::string shader_name = "renderer-default";
+            if (library.find(shader_name) != library.end()) {
+                current_shader = library[shader_name];
+            }
+            if (current_shader) {
+                current_shader->bind();
             }
             for (auto& mesh : this->m_meshes) {
-                if (this->m_shader) {
-                    this->m_shader->uniform_mat4("model", mesh.transform);
+                if (current_shader) {
+                    current_shader->uniform_mat4("model", mesh.transform);
                 }
                 for (size_t i = 0; i < mesh.textures.size(); i++) {
                     auto& desc = mesh.textures[i];
                     desc.data->bind((uint32_t)i);
-                    if (this->m_shader && !desc.uniform_name.empty()) {
-                        this->m_shader->uniform_int(desc.uniform_name, (GLint)i);
+                    if (current_shader && !desc.uniform_name.empty()) {
+                        current_shader->uniform_int(desc.uniform_name, (GLint)i);
                     }
                 }
                 mesh.vao->bind();
                 mesh.ebo->draw(GL_TRIANGLES);
                 mesh.vao->unbind();
             }
+
         }
     }
 }

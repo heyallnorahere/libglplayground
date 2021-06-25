@@ -21,12 +21,16 @@ namespace libplayground {
             std::vector<uint32_t> indices;
             std::vector<texture_descriptor> textures;
         };
+        struct model_descriptor {
+            std::function<void(const model_descriptor&)> render_callback; // todo: not this
+            glm::mat4 transform;
+            int32_t animation_id = -1;
+        };
         class renderer : public ref_counted {
         public:
             void reset();
-            void set_shader(ref<shader> shader);
-            ref<shader> get_shader();
             void submit(const mesh& m);
+            void submit(const model_descriptor& model);
             void render();
         private:
             struct assembled_mesh {
@@ -36,8 +40,8 @@ namespace libplayground {
                 ref<element_buffer_object> ebo;
                 glm::mat4 transform;
             };
-            ref<shader> m_shader;
             std::vector<assembled_mesh> m_meshes;
+            std::vector<model_descriptor> m_models;
         };
     }
 }

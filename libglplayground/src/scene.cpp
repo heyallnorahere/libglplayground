@@ -4,6 +4,8 @@
 #include "entity.h"
 #include "scene.h"
 #include "components.h"
+#include "shader.h"
+#include "shader_library.h"
 namespace libplayground {
     namespace gl {
         entity scene::create() {
@@ -27,11 +29,16 @@ namespace libplayground {
                 m.textures = mesh.textures;
                 renderer->submit(m);
             });
+            auto model_view = this->m_registry.view<components::transform_component, components::model_component>();
+            model_view.each([&](auto& transform, components::model_component& model) {
+                model_descriptor desc;
+                desc.render_callback = [model](const auto&) {  }
+            });
             auto camera_view = this->m_registry.view<components::transform_component, components::camera_component>();
             entt::entity camera = entt::null;
             // first, search for primary camera entities
             camera_view.each([&](const auto& entity, auto& transform, auto& camera_) {
-                if (camera_.primary) {
+                if (camera_.primary && camera == entt::null) {
                     camera = entity;
                 }
             });
@@ -41,18 +48,20 @@ namespace libplayground {
             }
             // and then, if we found a camera, calculate matricies for rendering
             if (camera != entt::null) {
-                ref<shader> current_shader = renderer->get_shader();
-                if (current_shader) {
-                    float aspect_ratio = (float)window->get_width() / (float)window->get_height();
-                    auto components = camera_view.get(camera);
-                    auto& transform = std::get<0>(components);
-                    glm::vec3 position = transform.get_matrix() * glm::vec4(0.f, 0.f, 0.f, 1.f);
-                    auto& camera_comp = std::get<1>(components);
-                    glm::mat4 projection = glm::perspective(glm::radians(45.f), aspect_ratio, 0.1f, 100.f); // todo: make every field part of camera_component
-                    glm::mat4 view = glm::lookAt(position, position + camera_comp.direction, camera_comp.up);
-                    current_shader->bind();
-                    current_shader->uniform_mat4("projection", projection);
-                    current_shader->uniform_mat4("view", view);
+                auto set_uniforms = [&](ref<shader> s, const glm::mat4& projection, const glm::mat4& view) {
+                    s->bind();
+                    s->uniform_mat4("projection", projection);
+                    s->uniform_mat4("view", view);
+                };
+                float aspect_ratio = (float)window->get_width() / (float)window->get_height();
+                auto components = camera_view.get(camera);
+                auto& transform = std::get<0>(components);
+                glm::vec3 position = transform.get_matrix() * glm::vec4(0.f, 0.f, 0.f, 1.f);
+                auto& camera_comp = std::get<1>(components);
+                glm::mat4 projection = glm::perspective(glm::radians(45.f), aspect_ratio, 0.1f, 100.f); // todo: make every field part of camera_component
+                glm::mat4 view = glm::lookAt(position, position + camera_comp.direction, camera_comp.up);
+                for (const auto& pair : shader_library::get()) {
+                    set_uniforms(pair.second, projection, view);
                 }
             }
         }

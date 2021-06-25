@@ -20,6 +20,9 @@
 // class for easily reading and creating shaders
 #include "libglplayground/shader_factory.h"
 
+// a registry of shaders
+#include "libglplayground/shader_library.h"
+
 // assimp-imported models
 #include "libglplayground/model.h"
 

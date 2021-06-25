@@ -82,7 +82,8 @@ namespace ecs_example {
             this->m_camera = this->m_scene->create();
             this->m_camera.add_component<components::camera_component>();
             shader_factory factory;
-            this->m_shader = factory.single_file("assets/shaders/ecs-example.glsl");
+            auto& library = shader_library::get();
+            library["renderer-default"] = factory.single_file("assets/shaders/ecs-example.glsl");
         }
         virtual void update() override {
             static float angle = 0.f;
@@ -94,9 +95,6 @@ namespace ecs_example {
             transform.translation = glm::vec3(x, 0.f, z);
             auto& camera = this->m_camera.get_component<components::camera_component>();
             camera.direction = glm::normalize(-transform.translation);
-        }
-        virtual void render() override {
-            this->m_renderer->set_shader(this->m_shader);
         }
     private:
         ref<shader> m_shader;

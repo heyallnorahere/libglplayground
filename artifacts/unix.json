@@ -17,6 +17,10 @@
             "destination": "examples/ecs-example"
         },
         {
+            "type": "file",
+            "source": "build/examples/model-loading/model-loading"
+        },
+        {
             "type": "directory",
             "source": "build/examples/basic-usage/assets",
             "destination": "examples/assets"
@@ -29,6 +33,11 @@
         {
             "type": "directory",
             "source": "build/examples/ecs-example/assets",
+            "destination": "examples/assets"
+        },
+        {
+            "type": "directory",
+            "source": "build/examples/model-loading/assets",
             "destination": "examples/assets"
         },
         {

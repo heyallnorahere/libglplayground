@@ -1,5 +1,6 @@
 #pragma once
 #include "renderer.h"
+#include "model.h"
 namespace libplayground {
     namespace gl {
         namespace components {
@@ -36,6 +37,10 @@ namespace libplayground {
                 }
                 camera_component(const camera_component&) = default;
                 camera_component& operator=(const camera_component&) = default;
+            };
+            struct model_component {
+                ref<model> data;
+                int32_t current_animation = -1;
             };
         }
     }
