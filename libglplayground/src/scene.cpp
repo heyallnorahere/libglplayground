@@ -32,7 +32,12 @@ namespace libplayground {
             auto model_view = this->m_registry.view<components::transform_component, components::model_component>();
             model_view.each([&](auto& transform, components::model_component& model) {
                 model_descriptor desc;
-                desc.render_callback = [model](const auto&) {  }
+                desc.render_callback = [&model](const auto& desc) {
+                    model.data->draw(desc.animation_id, 0.f);
+                };
+                desc.transform = transform.get_matrix();
+                desc.animation_id = model.current_animation;
+                renderer->submit(desc);
             });
             auto camera_view = this->m_registry.view<components::transform_component, components::camera_component>();
             entt::entity camera = entt::null;

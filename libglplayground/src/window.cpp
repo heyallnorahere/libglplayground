@@ -22,13 +22,16 @@ namespace libplayground {
                 break;
             }
         }
-        window::window(const std::string& title, int32_t width, int32_t height, int32_t major_opengl_version, int32_t minor_opengl_version) {
+        window::window(const std::string& title, int32_t width, int32_t height, bool mesa_context, int32_t major_opengl_version, int32_t minor_opengl_version) {
             if (window_count == 0) {
                 if (!glfwInit()) {
                     throw std::runtime_error("GLFW failed to initialize!");
                 }
             }
             window_count++;
+            if (mesa_context) {
+                glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_OSMESA_CONTEXT_API);
+            }
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major_opengl_version);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor_opengl_version);
 #ifndef NDEBUG

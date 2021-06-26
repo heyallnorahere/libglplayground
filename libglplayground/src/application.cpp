@@ -7,9 +7,9 @@
 #include "components.h"
 namespace libplayground {
     namespace gl {
-        application::application(const std::string& title, int32_t width, int32_t height, int32_t major_opengl_version, int32_t minor_opengl_version) {
+        application::application(const std::string& title, int32_t width, int32_t height, bool mesa_context, int32_t major_opengl_version, int32_t minor_opengl_version) {
             this->m_title = title;
-            this->m_window = ref<window>::create(title, width, height, major_opengl_version, minor_opengl_version);
+            this->m_window = ref<window>::create(title, width, height, mesa_context, major_opengl_version, minor_opengl_version);
             this->m_renderer = ref<renderer>::create();
             this->m_scene = ref<scene>::create();
         }

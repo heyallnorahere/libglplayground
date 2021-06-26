@@ -58,7 +58,6 @@ namespace libplayground {
             } else {
                 this->m_shader = library["model-static"];
             }
-            // todo: get the model shader from the shader library, when thats implemented
             this->m_inverse_transform = glm::inverse(from_assimp_matrix(this->m_scene->mRootNode->mTransformation));
             uint32_t vertex_count = 0;
             uint32_t index_count = 0;
@@ -211,6 +210,10 @@ namespace libplayground {
             return 0.f;
         }
         void model::draw(int32_t animation_index, float animation_time) {
+            if (!this->m_shader) {
+                spdlog::warn("Model shader not found; make sure to set \"model-" + std::string(this->m_is_animated ? "animated" : "static") +  "\" in the shader library");
+                return;
+            }
             this->m_shader->bind();
             if (this->m_is_animated) {
                 float time = 0.f;

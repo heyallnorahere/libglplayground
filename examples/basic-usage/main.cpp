@@ -1,10 +1,10 @@
 #define LIBGLPLAYGROUND_DEFINE_MAIN
 #define LIBGLPLAYGROUND_APP_NAMESPACE basic_usage
 #include <libglplayground.h>
-#ifdef SYSTEM_MACOSX
-constexpr int32_t major_opengl_version = 3;
+#if defined(SYSTEM_MACOSX) && !defined(NDEBUG)
+constexpr bool mesa_context = true;
 #else
-constexpr int32_t major_opengl_version = 4; // for debugging purposes on windows and linux
+constexpr bool mesa_context = false;
 #endif
 using namespace libplayground::gl;
 namespace basic_usage {
@@ -13,7 +13,7 @@ namespace basic_usage {
     };
     class basic_usage_app : public application {
     public:
-        basic_usage_app() : application("Example application", 800, 600, major_opengl_version) { }
+        basic_usage_app() : application("Example application", 800, 600, mesa_context, 4) { }
     protected:
         virtual void load_content() override {
             std::vector<vertex_attribute> attributes = {

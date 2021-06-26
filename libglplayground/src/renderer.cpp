@@ -51,7 +51,9 @@ namespace libplayground {
                 mesh.ebo->draw(GL_TRIANGLES);
                 mesh.vao->unbind();
             }
-
+            for (const auto& model : this->m_models) {
+                model.render_callback(model);
+            }
         }
     }
 }

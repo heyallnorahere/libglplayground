@@ -14,6 +14,7 @@ This project currently runs on [CMake](https://cmake.org). Once I get a release 
 | ---     | ---    |
 | Ubuntu  | [![build-ubuntu](https://img.shields.io/github/workflow/status/yodasoda1219/libglplayground/build-ubuntu)](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-ubuntu.yml)    |
 | Windows | [![build-windows](https://img.shields.io/github/workflow/status/yodasoda1219/libglplayground/build-windows)](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-windows.yml) |
+| MacOS   | [![build-macosx](https://img.shields.io/github/workflow/status/yodasoda1219/libglplayground/build-macosx)](https://github.com/yodasoda1219/libglplayground/actions/workflows/build-macosx.yml)    |
 
 ## How do I use this?
 

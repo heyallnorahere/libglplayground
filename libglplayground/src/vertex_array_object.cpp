@@ -18,8 +18,20 @@ namespace libplayground {
         void vertex_array_object::add_vertex_attributes(const std::vector<vertex_attribute>& attributes) {
             for (size_t i = 0; i < attributes.size(); i++) {
                 const auto& attrib = attributes[i];
-                glVertexAttribPointer((GLuint)i, (GLint)attrib.elements, attrib.type, attrib.normalized, (GLsizei)attrib.stride, (void*)attrib.offset);
                 glEnableVertexAttribArray((GLuint)i);
+                switch (attrib.type) {
+                case GL_INT:
+                case GL_UNSIGNED_INT:
+                case GL_BYTE:
+                case GL_UNSIGNED_BYTE:
+                case GL_SHORT:
+                case GL_UNSIGNED_SHORT:
+                    glVertexAttribIPointer((GLuint)i, (GLint)attrib.elements, attrib.type, (GLsizei)attrib.stride, (void*)attrib.offset);
+                    break;
+                default:
+                    glVertexAttribPointer((GLuint)i, (GLint)attrib.elements, attrib.type, attrib.normalized, (GLsizei)attrib.stride, (void*)attrib.offset);
+                    break;
+                }
             }
         }
         GLuint vertex_array_object::get() {

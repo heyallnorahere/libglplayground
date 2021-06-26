@@ -13,7 +13,7 @@ namespace libplayground {
         };
         class window : public ref_counted {
         public:
-            window(const std::string& title, int32_t width, int32_t height, int32_t major_opengl_version, int32_t minor_opengl_version);
+            window(const std::string& title, int32_t width, int32_t height, bool mesa_context, int32_t major_opengl_version, int32_t minor_opengl_version);
             ~window();
             GLFWwindow* get();
             std::string get_title();
