@@ -9,13 +9,12 @@ namespace libplayground {
         class vertex_array_object;
         class vertex_buffer_object;
         class element_buffer_object;
-        struct animated_vertex {
-            vertex m;
+        struct vertex_bone_data {
             uint32_t ids[4] = { 0, 0, 0, 0 };
             float weights[4] = { 0.f, 0.f, 0.f, 0.f };
             void add_bone_data(uint32_t id, float weight) {
                 for (size_t i = 0; i < 4; i++) {
-                    if (this->weights[i] < 0.01f) { // floats arent always their assigned value, they vary between ~+0.000000001f and ~-0.000000001f
+                    if (this->weights[i] < 0.01f) { // floats arent always their assigned value, they vary between ~+0.00001f and ~-0.00001f
                         this->ids[i] = id;
                         this->weights[i] = weight;
                     }
@@ -23,41 +22,38 @@ namespace libplayground {
                 spdlog::warn("This vertex has more than four bones and weights affecting it; extra data will not be used");
             }
         };
-        struct index {
-            uint32_t v1, v2, v3;
-            uint32_t& operator[](size_t index) {
-                switch (index) {
-                case 0:
-                    return this->v1;
-                    break;
-                case 1:
-                    return this->v2;
-                    break;
-                case 2:
-                    return this->v3;
-                    break;
-                default:
-                    throw std::runtime_error("Index out of range!");
-                }
-            }
-        };
-        struct animated_mesh {
-            uint32_t base_vertex, base_index, material_index, index_count, vertex_count;
-            glm::mat4 transform = glm::mat4(1.f);
-            std::string node_name, mesh_name;
+        class assimp_mesh {
+        public:
+            std::vector<vertex>& get_vertex_data();
+            std::vector<uint32_t>& get_index_data();
+            std::vector<vertex_bone_data>& get_bone_data();
+            aiMesh* get_assimp_pointer();
+            ref<vertex_array_object> get_vao();
+            ref<vertex_buffer_object> get_vbo();
+            ref<vertex_buffer_object> get_bone_buffer();
+            ref<element_buffer_object> get_ebo();
+            assimp_mesh(aiMesh* ptr, bool is_animated);
+            assimp_mesh(const assimp_mesh&) = delete;
+            assimp_mesh& operator=(const assimp_mesh&) = delete;
+            void setup();
+        private:
+            std::vector<vertex> m_vertices;
+            std::vector<uint32_t> m_indices;
+            std::vector<vertex_bone_data> m_bone_data;
+            aiMesh* m_ptr;
+            bool m_is_animated;
+            ref<vertex_array_object> m_vao;
+            ref<vertex_buffer_object> m_vbo, m_bone_buffer;
+            ref<element_buffer_object> m_ebo;
         };
         class model : public ref_counted {
         public:
             model(const std::string& path);
             model(const model&) = delete;
             model& operator=(const model&) = delete;
-            std::vector<animated_mesh>& get_meshes();
-            const std::vector<animated_mesh>& get_meshes() const;
-            const std::vector<vertex>& get_static_vertices() const;
-            const std::vector<index>& get_indices() const;
+            std::vector<assimp_mesh>& get_meshes();
+            const std::vector<assimp_mesh>& get_meshes() const;
             ref<shader> get_mesh_shader();
-            std::vector<ref<texture>>& get_textures();
-            const std::vector<ref<texture>>& get_textures() const;
             const std::string& get_file_path() const;
             uint32_t get_animation_count() const;
             int32_t find_animation_by_name(const std::string& name) const;
@@ -78,23 +74,16 @@ namespace libplayground {
             glm::vec3 interpolate_translation(float animation_time, const aiNodeAnim* node_animation);
             glm::quat interpolate_rotation(float animation_time, const aiNodeAnim* node_animation);
             glm::vec3 interpolate_scale(float animation_time, const aiNodeAnim* node_animation);
-            std::vector<animated_mesh> m_meshes;
             std::unique_ptr<Assimp::Importer> m_importer;
             glm::mat4 m_inverse_transform;
             uint32_t m_bone_count = 0;
             std::vector<bone_info> m_bone_info;
-            ref<vertex_array_object> m_vao;
-            ref<vertex_buffer_object> m_vbo;
-            ref<element_buffer_object> m_ebo;
-            std::vector<vertex> m_static_vertices;
-            std::vector<animated_vertex> m_animated_vertices;
-            std::vector<index> m_indices;
+            std::vector<assimp_mesh> m_meshes;
             std::unordered_map<std::string, uint32_t> m_bone_map;
             std::unordered_map<aiNode*, std::vector<uint32_t>> m_node_map;
             std::vector<glm::mat4> m_bone_transforms;
             const aiScene* m_scene;
             ref<shader> m_shader;
-            std::vector<ref<texture>> m_textures;
             std::string m_file_path;
             bool m_is_animated;
         };
