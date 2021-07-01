@@ -27,10 +27,6 @@ namespace libplayground {
         static glm::quat from_assimp_quaternion(const aiQuaternion& quat) {
             return glm::quat(quat.w, quat.x, quat.y, quat.z);
         }
-        static constexpr uint32_t model_import_flags =
-            aiProcess_Triangulate |
-            aiProcess_FlipUVs |
-            aiProcess_LimitBoneWeights;
         struct log_stream : public Assimp::LogStream {
             static void initialize() {
                 if (Assimp::DefaultLogger::isNullLogger()) {
@@ -47,8 +43,8 @@ namespace libplayground {
             log_stream::initialize();
             spdlog::info("Loading model from: " + this->m_file_path);
             this->m_importer = std::make_unique<Assimp::Importer>();
-            this->m_scene = this->m_importer->ReadFile(this->m_file_path, model_import_flags);
-            if (!this->m_scene || !this->m_scene->HasMeshes()) {
+            this->m_scene = this->m_importer->ReadFile(this->m_file_path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_LimitBoneWeights);
+            if (!this->m_scene || !this->m_scene->HasMeshes() || this->m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
                 throw std::runtime_error("Could not load model from: " + this->m_file_path);
             }
             this->m_is_animated = this->m_scene->mAnimations != nullptr;
@@ -97,6 +93,7 @@ namespace libplayground {
                         if (mesh->HasTextureCoords(0)) {
                             v.uv = from_assimp_vector<2>(mesh->mTextureCoords[0][i]);
                         }
+                        this->m_static_vertices.push_back(v);
                     }
                 }
                 for (size_t i = 0; i < (size_t)mesh->mNumFaces; i++) {
