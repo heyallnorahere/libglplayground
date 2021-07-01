@@ -1,4 +1,3 @@
-#shader vertex
 #version 330 core
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -22,12 +21,4 @@ void main() {
     mat4 bone_transform = get_bone_transform();
     gl_Position = projection * view * model * bone_transform * vec4(position, 1.0);
     uv = _uv;
-}
-#shader fragment
-#version 330 core
-out vec4 out_color;
-in vec2 uv;
-// todo: materials
-void main() {
-    out_color = vec4(1.0); // todo: calculate material stuff
 }

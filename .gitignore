@@ -13,6 +13,3 @@ Makefile
 # ide settings
 .vs/
 .vscode/
-
-# models from examples
-models/
