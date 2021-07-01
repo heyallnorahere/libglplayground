@@ -13,6 +13,10 @@
 #include <assimp/Importer.hpp>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
+#ifdef BUILT_IMGUI
+#include <imgui.h>
+#include <misc/cpp/imgui_stdlib.h>
+#endif
 #include <string>
 #include <sstream>
 #include <fstream>
