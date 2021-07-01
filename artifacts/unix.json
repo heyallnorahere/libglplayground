@@ -18,7 +18,8 @@
         },
         {
             "type": "file",
-            "source": "build/examples/model-loading/model-loading"
+            "source": "build/examples/model-loading/model-loading",
+            "destination": "examples/model-loading"
         },
         {
             "type": "directory",

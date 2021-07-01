@@ -15,16 +15,37 @@ namespace model_loading {
         virtual void load_content() override {
             shader_factory factory;
             auto& library = shader_library::get();
-            library["model-animated"] = factory.single_file("assets/shaders/model-loading-animated.glsl");
-            entity e = this->m_scene->create();
-            e.add_component<components::model_component>(ref<model>::create("assets/models/animated.fbx"), 0);
-            this->m_camera = this->m_scene->create();
-            auto& transform = this->m_camera.get_component<components::transform_component>();
-            transform.translation = glm::vec3(2.5f);
-            this->m_camera.add_component<components::camera_component>().direction = glm::normalize(-transform.translation);
+            library["model-animated"] = factory.multiple_files("assets/shaders/model-loading-static.glsl", "assets/shaders/model-loading-fragment.glsl");
+            this->m_entity = this->m_scene->create();
+            this->m_entity.add_component<components::model_component>(ref<model>::create("assets/models/bee.glb"), -1);
+            entity camera = this->m_scene->create();
+            auto& transform = camera.get_component<components::transform_component>();
+            transform.translation = glm::vec3(5.f);
+            camera.add_component<components::camera_component>().direction = glm::normalize(-transform.translation);
+        }
+        virtual void render() override {
+#if defined(BUILT_IMGUI) && !defined(NDEBUG)
+            {
+                ImGui::Begin("Debug menu");
+                auto& transform = this->m_entity.get_component<components::transform_component>();
+                auto& model = this->m_entity.get_component<components::model_component>();
+                ImGui::DragFloat3("Position", &transform.translation.x);
+                ImGui::DragFloat3("Rotation", &transform.rotation.x);
+                ImGui::DragFloat3("Scale", &transform.scale.x, 0.05f, 0.001f, 2.f);
+                ImGui::InputInt("Animation ID", &model.current_animation);
+                if (model.current_animation < -1) {
+                    model.current_animation = -1;
+                }
+                int32_t animation_count = (int32_t)model.data->get_animation_count();
+                if (model.current_animation >= animation_count) {
+                    model.current_animation = animation_count - 1;
+                }
+                ImGui::End();
+            }
+#endif
         }
     private:
-        entity m_camera;
+        entity m_entity;
     };
     ref<application> get_application_instance() {
         return ref<model_loading_app>::create();
