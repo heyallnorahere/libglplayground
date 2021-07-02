@@ -17,6 +17,7 @@ namespace libplayground {
                     if (this->weights[i] < 0.01f) { // floats arent always their assigned value, they vary between ~+0.00001f and ~-0.00001f
                         this->ids[i] = id;
                         this->weights[i] = weight;
+                        return;
                     }
                 }
                 spdlog::warn("This vertex has more than four bones and weights affecting it; extra data will not be used");
@@ -33,8 +34,6 @@ namespace libplayground {
             ref<vertex_buffer_object> get_bone_buffer();
             ref<element_buffer_object> get_ebo();
             assimp_mesh(aiMesh* ptr, bool is_animated);
-            assimp_mesh(const assimp_mesh&) = delete;
-            assimp_mesh& operator=(const assimp_mesh&) = delete;
             void setup();
         private:
             std::vector<vertex> m_vertices;

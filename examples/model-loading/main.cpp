@@ -15,13 +15,11 @@ namespace model_loading {
         virtual void load_content() override {
             shader_factory factory;
             auto& library = shader_library::get();
-            library["model-animated"] = factory.multiple_files("assets/shaders/model-loading-static.glsl", "assets/shaders/model-loading-fragment.glsl");
+            library["model-animated"] = factory.multiple_files("assets/shaders/model-loading-animated.glsl", "assets/shaders/model-loading-fragment.glsl");
             this->m_entity = this->m_scene->create();
             this->m_entity.add_component<components::model_component>(ref<model>::create("assets/models/bee.glb"), -1);
-            entity camera = this->m_scene->create();
-            auto& transform = camera.get_component<components::transform_component>();
-            transform.translation = glm::vec3(5.f);
-            camera.add_component<components::camera_component>().direction = glm::normalize(-transform.translation);
+            this->m_camera = this->m_scene->create();
+            this->m_camera.add_component<components::camera_component>().direction = glm::normalize(glm::vec3(-1.f));
         }
         virtual void render() override {
 #if defined(BUILT_IMGUI) && !defined(NDEBUG)
@@ -40,12 +38,19 @@ namespace model_loading {
                 if (model.current_animation >= animation_count) {
                     model.current_animation = animation_count - 1;
                 }
+                static float distance_from_object = 5.f;
+                static float last_distance = 0.f;
+                ImGui::SliderFloat("Distance from object", &distance_from_object, 1.f, 100.f);
+                if (fabs(distance_from_object - last_distance) > 0.001f) {
+                    this->m_camera.get_component<components::transform_component>().translation = glm::vec3(distance_from_object);
+                    last_distance = distance_from_object;
+                }
                 ImGui::End();
             }
 #endif
         }
     private:
-        entity m_entity;
+        entity m_entity, m_camera;
     };
     ref<application> get_application_instance() {
         return ref<model_loading_app>::create();

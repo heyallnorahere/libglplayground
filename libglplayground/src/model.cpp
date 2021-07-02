@@ -67,14 +67,35 @@ namespace libplayground {
             this->m_is_animated = is_animated;
         }
         void assimp_mesh::setup() {
-            throw std::runtime_error("assimp_mesh::setup() has not yet been implemented; sorry");
+            this->m_vao = ref<vertex_array_object>::create();
+            this->m_vao->bind();
+            this->m_vbo = ref<vertex_buffer_object>::create(this->m_vertices);
+            this->m_bone_buffer = ref<vertex_buffer_object>::create(this->m_bone_data);
+            this->m_ebo = ref<element_buffer_object>::create(this->m_indices);
+            std::vector<vertex_attribute> attributes = {
+                { GL_FLOAT, 3, sizeof(vertex), offsetof(vertex, pos), false },
+                { GL_FLOAT, 3, sizeof(vertex), offsetof(vertex, normal), false },
+                { GL_FLOAT, 2, sizeof(vertex), offsetof(vertex, uv), false }
+            };
+            if (this->m_is_animated) {
+                attributes.insert(attributes.end(), {
+                    { GL_INT, 4, sizeof(vertex_bone_data), offsetof(vertex_bone_data, ids), false },
+                    { GL_FLOAT, 4, sizeof(vertex_bone_data), offsetof(vertex_bone_data, weights), false },
+                });
+            }
+            this->m_vao->add_vertex_attributes(attributes);
+            this->m_vao->unbind();
         }
         model::model(const std::string& path) {
             this->m_file_path = path;
             log_stream::initialize();
             spdlog::info("Loading model from: " + this->m_file_path);
             this->m_importer = std::make_unique<Assimp::Importer>();
-            this->m_scene = this->m_importer->ReadFile(this->m_file_path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_LimitBoneWeights);
+            uint32_t flags =
+                aiProcess_Triangulate |
+                aiProcess_FlipUVs |
+                aiProcess_LimitBoneWeights;
+            this->m_scene = this->m_importer->ReadFile(this->m_file_path, flags);
             if (!this->m_scene || !this->m_scene->HasMeshes() || this->m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
                 throw std::runtime_error("Could not load model from: " + this->m_file_path);
             }
@@ -188,7 +209,7 @@ namespace libplayground {
             this->m_shader->bind();
             if (this->m_is_animated) {
                 float time = 0.f;
-                if (animation_index != -1 && this->m_is_animated) {
+                if (animation_index != -1) {
                     const aiAnimation* animation = this->m_scene->mAnimations[animation_index];
                     float ticks_per_second = static_cast<float>(animation->mTicksPerSecond != 0.0 ? animation->mTicksPerSecond : 25.0);
                     float time_in_ticks = animation_time * ticks_per_second;
@@ -198,7 +219,7 @@ namespace libplayground {
                 this->bone_transform(time, animation_index);
                 for (size_t i = 0; i < this->m_bone_info.size(); i++) {
                     std::string uniform_name = "bones[" + std::to_string(i) + "]";
-                    glm::mat4 matrix = this->m_bone_info[i].final_transform;
+                    glm::mat4 matrix = this->m_bone_transforms[i];
                     this->m_shader->uniform_mat4(uniform_name, matrix);
                 }
             }
