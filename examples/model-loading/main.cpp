@@ -1,16 +1,16 @@
 #define LIBGLPLAYGROUND_DEFINE_MAIN
 #define LIBGLPLAYGROUND_APP_NAMESPACE model_loading
 #include <libglplayground.h>
-#if defined(SYSTEM_MACOSX) && !defined(NDEBUG)
-constexpr bool mesa_context = true;
+#if !defined(SYSTEM_MACOSX) && !defined(NDEBUG)
+constexpr int32_t major_opengl_version = 4;
 #else
-constexpr bool mesa_context = false;
+constexpr int32_t major_opengl_version = 3;
 #endif
 using namespace libplayground::gl;
 namespace model_loading {
     class model_loading_app : public application {
     public:
-        model_loading_app() : application("Model loading example", 800, 600, mesa_context, 4) { }
+        model_loading_app() : application("Model loading example", 800, 600, false, major_opengl_version) { }
     protected:
         virtual void load_content() override {
             shader_factory factory;
