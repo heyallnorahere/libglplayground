@@ -4,6 +4,10 @@
 
 This is a framework for writing OpenGL applications without the hassle of setting up contexts and all of that.
 
+### Branch: model-loading
+
+This branch is for development of the `libplayground::gl::model` class. It will be merged into main when basic loading and skeletal animation is finished.
+
 ## Building
 
 This project currently runs on [CMake](https://cmake.org). Once I get a release ready, I will create a [Premake](https://premake.github.io) configuration.
