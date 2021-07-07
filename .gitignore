@@ -13,3 +13,7 @@ Makefile
 # ide settings
 .vs/
 .vscode/
+
+# blender backups
+*.blend*
+!*.blend
