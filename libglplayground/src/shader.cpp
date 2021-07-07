@@ -2,6 +2,7 @@
 #include "shader.h"
 namespace libplayground {
     namespace gl {
+        extern bool _context_destroyed_;
         static GLuint create_shader(const std::string& source, GLenum type) {
             GLuint shader = glCreateShader(type);
             const char* src = source.c_str();
@@ -61,7 +62,8 @@ namespace libplayground {
             }
         }
         shader::~shader() {
-            glDeleteProgram(this->m_id);
+            if (!_context_destroyed_)
+                glDeleteProgram(this->m_id);
         }
         void shader::bind() {
             glUseProgram(this->m_id);

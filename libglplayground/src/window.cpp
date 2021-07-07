@@ -3,6 +3,7 @@
 static uint32_t window_count = 0;
 namespace libplayground {
     namespace gl {
+        bool _context_destroyed_ = false;
         static std::map<GLFWwindow*, window*> window_map;
         static void opengl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const char* message, const void* user_param) {
             switch (id) {
@@ -66,6 +67,7 @@ namespace libplayground {
             spdlog::info("\tContext version: " + std::string((char*)glGetString(GL_VERSION)) + (debug ? " (debug)" : ""));
         }
         window::~window() {
+            _context_destroyed_ = true;
             glfwDestroyWindow(this->m_window);
             window_count--;
             if (window_count == 0) {
