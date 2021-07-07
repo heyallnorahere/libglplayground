@@ -16,8 +16,9 @@ namespace model_loading {
             shader_factory factory;
             auto& library = shader_library::get();
             library["model-animated"] = factory.multiple_files("assets/shaders/model-loading-animated.glsl", "assets/shaders/model-loading-fragment.glsl");
+            library["model-static"] = factory.multiple_files("assets/shaders/model-loading-static.glsl", "assets/shaders/model-loading-fragment.glsl");
             this->m_entity = this->m_scene->create();
-            this->m_entity.add_component<components::model_component>(ref<model>::create("assets/models/bee.glb"), -1);
+            this->m_entity.add_component<components::model_component>(ref<model>::create("assets/models/static-test-1.obj"), -1);
             this->m_camera = this->m_scene->create();
             this->m_camera.add_component<components::camera_component>().direction = glm::normalize(glm::vec3(-1.f));
         }

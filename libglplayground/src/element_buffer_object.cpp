@@ -18,6 +18,7 @@ namespace libplayground {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
         void element_buffer_object::draw(GLenum mode) {
+            this->bind();
             glDrawElements(mode, (GLsizei)this->m_index_count, GL_UNSIGNED_INT, nullptr);
         }
         GLuint element_buffer_object::get() {

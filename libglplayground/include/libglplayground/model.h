@@ -33,6 +33,8 @@ namespace libplayground {
             ref<vertex_buffer_object> get_vbo();
             ref<vertex_buffer_object> get_bone_buffer();
             ref<element_buffer_object> get_ebo();
+            std::string get_name();
+            void set_name(const std::string& name);
             assimp_mesh(aiMesh* ptr, bool is_animated);
             void setup();
         private:
@@ -44,6 +46,7 @@ namespace libplayground {
             ref<vertex_array_object> m_vao;
             ref<vertex_buffer_object> m_vbo, m_bone_buffer;
             ref<element_buffer_object> m_ebo;
+            std::string m_name;
         };
         class model : public ref_counted {
         public:

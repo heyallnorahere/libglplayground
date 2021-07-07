@@ -62,6 +62,12 @@ namespace libplayground {
         ref<element_buffer_object> assimp_mesh::get_ebo() {
             return this->m_ebo;
         }
+        std::string assimp_mesh::get_name() {
+            return this->m_name;
+        }
+        void assimp_mesh::set_name(const std::string& name) {
+            this->m_name = name;
+        }
         assimp_mesh::assimp_mesh(aiMesh* ptr, bool is_animated) {
             this->m_ptr = ptr;
             this->m_is_animated = is_animated;
@@ -272,7 +278,8 @@ namespace libplayground {
             this->m_node_map[node].resize(node->mNumMeshes);
             for (uint32_t i = 0; i < node->mNumMeshes; i++) {
                 uint32_t mesh = node->mMeshes[i];
-                // todo: something about node names
+                assimp_mesh& am = this->m_meshes[mesh];
+                am.set_name(node->mName.C_Str());
                 this->m_node_map[node][i] = mesh;
             }
             for (uint32_t i = 0; i < node->mNumChildren; i++) {

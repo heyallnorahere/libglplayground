@@ -6,6 +6,7 @@ namespace libplayground {
         bool _context_destroyed_ = false;
         static std::map<GLFWwindow*, window*> window_map;
         static void opengl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const char* message, const void* user_param) {
+#ifndef LIBGLPLAYGROUND_ENABLE_UNNECESSARY_GL_WARNINGS
             switch (id) {
             case 131169:
             case 131185:
@@ -13,6 +14,7 @@ namespace libplayground {
             case 131204:
                 return;    
             }
+#endif
             std::string formatted_message = "OpenGL: " + std::string(message);
             switch (type) {
             case GL_DEBUG_TYPE_ERROR:

@@ -24,3 +24,6 @@ set_property(TARGET libglplayground PROPERTY CXX_STANDARD 17)
 if(UNIX)
     set_property(TARGET libglplayground PROPERTY OUTPUT_NAME glplayground) # without this, on unix, it would output "liblibglplayground.a," which is just painful to look at
 endif()
+if(LIBGLPLAYGROUND_ENABLE_UNNECESSARY_GL_WARNINGS)
+    target_compile_definitions(libglplayground PRIVATE LIBGLPLAYGROUND_ENABLE_UNNECESSARY_GL_WARNINGS)
+endif()
