@@ -76,7 +76,6 @@ namespace libplayground {
             this->m_vao = ref<vertex_array_object>::create();
             this->m_vao->bind();
             this->m_vbo = ref<vertex_buffer_object>::create(this->m_vertices);
-            this->m_bone_buffer = ref<vertex_buffer_object>::create(this->m_bone_data);
             this->m_ebo = ref<element_buffer_object>::create(this->m_indices);
             std::vector<vertex_attribute> attributes = {
                 { GL_FLOAT, 3, sizeof(vertex), offsetof(vertex, pos), false },
@@ -84,6 +83,7 @@ namespace libplayground {
                 { GL_FLOAT, 2, sizeof(vertex), offsetof(vertex, uv), false }
             };
             if (this->m_is_animated) {
+                this->m_bone_buffer = ref<vertex_buffer_object>::create(this->m_bone_data);
                 attributes.insert(attributes.end(), {
                     { GL_INT, 4, sizeof(vertex_bone_data), offsetof(vertex_bone_data, ids), false },
                     { GL_FLOAT, 4, sizeof(vertex_bone_data), offsetof(vertex_bone_data, weights), false },
