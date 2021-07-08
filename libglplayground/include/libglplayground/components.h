@@ -1,6 +1,7 @@
 #pragma once
 #include "renderer.h"
 #include "model.h"
+#include "script.h"
 namespace libplayground {
     namespace gl {
         namespace components {
@@ -42,6 +43,28 @@ namespace libplayground {
                 ref<model> data;
                 int32_t current_animation = -1;
             };
+
+            struct script_component {
+                std::vector<ref<script>> scripts;
+                entity parent;
+                template<typename T, typename... Args> void bind(Args&&... args) {
+                    static_assert(std::is_base_of_v<script, T>, "The provided type does not extend \"script!\"");
+                    ref<script> sc = ref<T>::create(std::forward(args)...);
+                    sc->m_entity = this->parent;
+                    this->scripts.push_back(sc);
+                }
+                void update() {
+                    for (auto sc : this->scripts) {
+                        sc->update();
+                    }
+                }
+                script_component() = default;
+                script_component(const script_component&) = default;
+                script_component& operator=(const script_component&) = default;
+            };
+        }
+        template<> inline void scene::on_component_added<components::script_component>(entity& ent, components::script_component& component) {
+            component.parent = ent;
         }
     }
 }
