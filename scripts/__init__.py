@@ -1,0 +1,1 @@
+from scripts.syncdeps import run as syncdeps
