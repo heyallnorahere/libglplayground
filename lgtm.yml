@@ -2,15 +2,13 @@ extraction:
   cpp:
     prepare:
       packages:
-        - libgl1-mesa-dev
-        - cmake
-        - libxrandr-dev
-        - libxinerama-dev
-        - libxcursor-dev
-        - libxi-dev
+        - python
+    after_prepare:
+      - pip install -r scripts/requirements.txt
     configure:
       command:
-        - cmake . -B build -DCMAKE_BUILD_TYPE=Release
+        - python -m scripts sync-deps
+        - python -m scripts configure cmake Release -G "Unix Makefiles"
     index:
       build_command:
         - make -C build -j 8
