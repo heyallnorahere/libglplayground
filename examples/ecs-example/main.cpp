@@ -8,6 +8,20 @@ constexpr int32_t major_opengl_version = 3;
 #endif
 using namespace libplayground::gl;
 namespace ecs_example {
+    class camera_behavior : public script {
+    public:
+        virtual void update() override {
+            static float angle = 0.f;
+            angle += 1.f;
+            float factor = 5.f;
+            float x = cos(glm::radians(angle)) * factor;
+            float z = sin(glm::radians(angle)) * factor;
+            auto& transform = this->m_entity.get_component<components::transform_component>();
+            transform.translation = glm::vec3(x, 0.f, z);
+            auto& camera = this->m_entity.get_component<components::camera_component>();
+            camera.direction = glm::normalize(-transform.translation);
+        }
+    };
     class ecs_example_app : public application {
     public:
         ecs_example_app() : application("ECS example", 800, 600, false, major_opengl_version) { }
@@ -81,20 +95,10 @@ namespace ecs_example {
             }
             this->m_camera = this->m_scene->create();
             this->m_camera.add_component<components::camera_component>();
+            this->m_camera.add_component<components::script_component>().bind<camera_behavior>();
             shader_factory factory;
             auto& library = shader_library::get();
             library["renderer-default"] = factory.single_file("assets/shaders/ecs-example.glsl");
-        }
-        virtual void update() override {
-            static float angle = 0.f;
-            angle += 1.f;
-            float factor = 5.f;
-            float x = cos(glm::radians(angle)) * factor;
-            float z = sin(glm::radians(angle)) * factor;
-            auto& transform = this->m_camera.get_component<components::transform_component>();
-            transform.translation = glm::vec3(x, 0.f, z);
-            auto& camera = this->m_camera.get_component<components::camera_component>();
-            camera.direction = glm::normalize(-transform.translation);
         }
     private:
         ref<shader> m_shader;

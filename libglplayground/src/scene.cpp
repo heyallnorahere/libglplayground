@@ -17,7 +17,10 @@ namespace libplayground {
             this->m_registry.destroy(entity);
         }
         void scene::update() {
-            // todo: update components
+            auto updateable_view = this->m_registry.view<components::script_component>();
+            updateable_view.each([](auto& script_component) {
+                script_component.update();
+            });
         }
         void scene::render(ref<renderer> renderer, ref<window> window) {
             auto renderable_view = this->m_registry.view<components::transform_component, components::mesh_component>();

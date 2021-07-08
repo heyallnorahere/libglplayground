@@ -26,6 +26,9 @@
 // assimp-imported models
 #include "libglplayground/model.h"
 
+// scripting base class
+#include "libglplayground/script.h"
+
 // every built-in component; feel free to write more!
 #include "libglplayground/components.h"
 
