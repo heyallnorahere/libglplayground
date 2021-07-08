@@ -26,3 +26,6 @@ def get_platform_name():
         if keyword in verbose_platform_name:
             return platform_names[keyword]
     return "Unknown"
+class Data:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
