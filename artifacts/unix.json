@@ -18,6 +18,11 @@
         },
         {
             "type": "file",
+            "source": "build/examples/user-input/user-input",
+            "destination": "examples/user-input"
+        },
+        {
+            "type": "file",
             "source": "build/examples/model-loading/model-loading",
             "destination": "examples/model-loading"
         },
@@ -34,6 +39,11 @@
         {
             "type": "directory",
             "source": "build/examples/ecs-example/assets",
+            "destination": "examples/assets"
+        },
+        {
+            "type": "directory",
+            "source": "build/examples/user-input/assets",
             "destination": "examples/assets"
         },
         {

@@ -10,11 +10,11 @@ namespace libplayground {
             Z, X, C, V, B, N, M
             // todo: add more keys
         };
-        // The button was just pressed down.
-        constexpr uint8_t button_down = 0b001;
-        // The button has been held for a frame or more.
-        constexpr uint8_t button_held = 0b010;
-        // The button was just released.
+        // The key was just pressed down.
+        constexpr uint8_t key_down = 0b001;
+        // The key has been held for a frame or more.
+        constexpr uint8_t key_held = 0b010;
+        // The key was just released.
         constexpr uint8_t key_released = 0b100;
         class input_manager : public ref_counted {
         public:
@@ -23,6 +23,8 @@ namespace libplayground {
             input_manager& operator=(input_manager&) = delete;
             uint8_t get_key(key key_enum);
             glm::vec2 get_mouse();
+            void disable_mouse();
+            void enable_mouse();
         private:
             input_manager(ref<window> window);
             void update();

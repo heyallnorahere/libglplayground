@@ -21,5 +21,18 @@ namespace libplayground {
         void input_manager::cursor_pos_callback(GLFWwindow* window, double x, double y) {
             // todo: update the m_mouse_offset field
         }
+        uint8_t input_manager::get_key(key key_enum) {
+            // todo: determine the state of the passed key value
+            return 0;
+        }
+        glm::vec2 input_manager::get_mouse() {
+            return this->m_mouse_offset;
+        }
+        void input_manager::disable_mouse() {
+            glfwSetInputMode(this->m_window->get(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        void input_manager::enable_mouse() {
+            glfwSetInputMode(this->m_window->get(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
     }
 }
