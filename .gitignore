@@ -13,3 +13,6 @@ Makefile
 # ide settings
 .vs/
 .vscode/
+
+# python script cache
+scripts/__pycache__/
