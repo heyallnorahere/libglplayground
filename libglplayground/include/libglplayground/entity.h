@@ -31,6 +31,9 @@ namespace libplayground {
             bool operator!=(const entity& other) const {
                 return !(*this == other);
             }
+            scene* get_scene() const {
+                return this->m_scene;
+            }
         private:
             entt::entity m_handle = entt::null;
             scene* m_scene = nullptr;

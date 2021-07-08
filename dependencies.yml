@@ -10,3 +10,4 @@ Ubuntu:
   - libxinerama-dev
   - libxcursor-dev
   - libxi-dev
+  - cmake

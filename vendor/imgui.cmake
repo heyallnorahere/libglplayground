@@ -8,4 +8,5 @@ file(GLOB IMGUI_STDLIB "${IMGUI_DIRECTORY}/misc/cpp/imgui_stdlib.*")
 set(MANIFEST ${IMGUI_CORE_SOURCE} ${IMGUI_CORE_HEADERS} ${IMGUI_OPENGL_BACKEND} ${IMGUI_GLFW_BACKEND} ${IMGUI_STDLIB})
 add_library(imgui STATIC ${MANIFEST})
 target_link_libraries(imgui PUBLIC glfw glad)
+target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD) # to prevent imgui from trying to include glew or any other loader on linux
 target_include_directories(imgui PUBLIC ${IMGUI_DIRECTORY})
