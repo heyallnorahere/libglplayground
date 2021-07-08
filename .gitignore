@@ -17,3 +17,6 @@ Makefile
 # blender backups
 *.blend*
 !*.blend
+
+# python script cache
+scripts/__pycache__/

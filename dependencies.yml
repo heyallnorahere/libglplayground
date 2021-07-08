@@ -1,0 +1,12 @@
+Arch-Linux:
+  - libxi
+  - libxinerama
+  - libxcursor
+  - libxrandr
+  - cmake
+Ubuntu:
+  - libgl1-mesa-dev
+  - libxrandr-dev
+  - libxinerama-dev
+  - libxcursor-dev
+  - libxi-dev
