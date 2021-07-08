@@ -5,6 +5,7 @@
 #include "scene.h"
 #include "application.h"
 #include "components.h"
+#include "input_manager.h"
 #ifdef BUILT_IMGUI
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -61,12 +62,14 @@ namespace libplayground {
             this->m_window = ref<window>::create(title, width, height, mesa_context, major_opengl_version, minor_opengl_version);
             this->m_renderer = ref<renderer>::create();
             this->m_scene = ref<scene>::create();
+            input_manager::create(this->m_window);
         }
         void application::run() {
             spdlog::info("Starting application " + this->m_title + "...");
             init_imgui(this->m_window);
             this->load_content();
             while (!this->m_window->should_window_close()) {
+                input_manager::get()->update();
                 this->update();
                 this->m_scene->update();
                 this->m_window->clear();
