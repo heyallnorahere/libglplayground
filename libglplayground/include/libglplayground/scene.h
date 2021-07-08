@@ -12,6 +12,7 @@ namespace libplayground {
             void update();
             void render(ref<renderer> renderer, ref<window> window);
             entity get_primary_camera_entity();
+            template<typename T> void on_component_added(entity& ent, T& component);
         private:
             entt::registry m_registry;
             friend class entity;
@@ -22,7 +23,7 @@ namespace libplayground {
                 throw std::runtime_error("This entity already has a component of type: " + std::string(typeid(T).name()));
             }
             T& component = this->m_scene->m_registry.emplace<T>(this->m_handle, std::forward<Args>(args)...);
-            // todo: call "on added" event
+            this->m_scene->on_component_added(*this, component);
             return component;
         }
         template<typename T> inline T& entity::get_component() {
@@ -39,6 +40,9 @@ namespace libplayground {
                 throw std::runtime_error("This entity does not have a component of type: " + std::string(typeid(T).name()));
             }
             this->m_scene->m_registry.remove<T>(this->m_handle);
+        }
+        template<typename T> inline void scene::on_component_added(entity& ent, T& component) {
+            // no specific definition exists, so just return
         }
     }
 }
