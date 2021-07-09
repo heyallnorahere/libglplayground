@@ -34,6 +34,12 @@ namespace user_input {
             if (im->get_key(key::D) & key_held) {
                 transform.translation += camera_speed * unit_right;
             }
+            if (im->get_key(key::O) & key_down) {
+                im->enable_mouse();
+            }
+            if (im->get_key(key::P) & key_down) {
+                im->disable_mouse();
+            }
         }
     private:
         void update_camera_direction() {
@@ -62,6 +68,9 @@ namespace user_input {
             shader_factory factory;
             auto& library = shader_library::get();
             library["renderer-default"] = factory.single_file("assets/shaders/user-input.glsl");
+            entity player = this->m_scene->create();
+            player.add_component<components::camera_component>();
+            player.add_component<components::script_component>().bind<player_behavior>();
         }
         virtual void render() override {
 #if defined(BUILT_IMGUI) && !defined(NDEBUG)

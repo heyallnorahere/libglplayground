@@ -26,11 +26,25 @@ namespace libplayground {
             void disable_mouse();
             void enable_mouse();
         private:
+            struct button_state {
+                button_state() {
+                    this->current = false;
+                    this->reset();
+                }
+                void reset() {
+                    this->last = this->current;
+                    this->current = false;
+                }
+                bool last, current;
+                int32_t key_code;
+            };
             input_manager(ref<window> window);
+            void insert_pairs();
             void update();
             static void create(ref<window> window);
             static void cursor_pos_callback(GLFWwindow* window, double x, double y);
             ref<window> m_window;
+            std::map<key, button_state> m_states;
             glm::vec2 m_mouse_offset;
             friend class application;
         };
