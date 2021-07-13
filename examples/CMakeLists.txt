@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+add_subdirectory("common")
 add_subdirectory("basic-usage")
 add_subdirectory("3d-demo")
 add_subdirectory("ecs-example")

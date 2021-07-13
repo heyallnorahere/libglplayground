@@ -1,4 +1,6 @@
 #pragma once
+#define LIBGLPLAYGROUND_INCLUDED
+
 // precompiled header
 #include "libglplayground/libglppch.h"
 
