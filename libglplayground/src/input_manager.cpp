@@ -54,7 +54,7 @@ namespace libplayground {
             global_input_manager = ref<input_manager>(new input_manager(window));
         }
         void input_manager::cursor_pos_callback(GLFWwindow* window, double x, double y) {
-            global_input_manager->m_mouse_offset += glm::vec2((float)x, (float)y);
+            global_input_manager->m_mouse_offset = glm::vec2((float)x, (float)y);
         }
     }
 }

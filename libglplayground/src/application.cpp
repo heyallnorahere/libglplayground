@@ -12,6 +12,7 @@
 #endif
 namespace libplayground {
     namespace gl {
+        static ref<application> running;
         static void init_imgui(ref<window> window) {
 #ifdef BUILT_IMGUI
             IMGUI_CHECKVERSION();
@@ -57,7 +58,11 @@ namespace libplayground {
             }
 #endif
         }
+        ref<application> application::get_running_application() {
+            return running;
+        }
         application::application(const std::string& title, int32_t width, int32_t height, bool mesa_context, int32_t major_opengl_version, int32_t minor_opengl_version) {
+            this->m_terminated = false;
             this->m_title = title;
             this->m_window = ref<window>::create(title, width, height, mesa_context, major_opengl_version, minor_opengl_version);
             this->m_renderer = ref<renderer>::create();
@@ -68,7 +73,8 @@ namespace libplayground {
             spdlog::info("Starting application " + this->m_title + "...");
             init_imgui(this->m_window);
             this->load_content();
-            while (!this->m_window->should_window_close()) {
+            running = ref<application>(this);
+            while (!this->m_window->should_window_close() && !this->m_terminated) {
                 input_manager::get()->update();
                 this->update();
                 this->m_scene->update();
@@ -85,6 +91,9 @@ namespace libplayground {
             spdlog::info("Shutting down...");
             this->unload_content();
             terminate_imgui();
+        }
+        void application::quit() {
+            this->m_terminated = true;
         }
         void application::load_content() { }
         void application::unload_content() { }
