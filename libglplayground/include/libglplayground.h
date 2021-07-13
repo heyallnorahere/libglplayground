@@ -5,6 +5,7 @@
 // core libglplayground headers
 #include "libglplayground/ref.h"
 #include "libglplayground/window.h"
+#include "libglplayground/input_manager.h"
 #include "libglplayground/renderer.h"
 #include "libglplayground/entity.h"
 #include "libglplayground/scene.h"

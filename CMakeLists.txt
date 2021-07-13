@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(libglplayground)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
     set(LIBGLPLAYGROUND_STANDALONE ON)
 endif()
