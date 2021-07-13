@@ -118,7 +118,7 @@ namespace libplayground {
             auto w = window_map[window];
             float scale = (float)height / (float)w->m_height;
             w->m_height = height;
-            w->m_width *= scale;
+            w->m_width *= static_cast<int32_t>(scale * (float)w->m_width);
             glViewport(((GLint)width - (GLint)w->m_width) / 2, 0, (GLsizei)w->m_width, (GLsizei)w->m_height);
             window_resize_event_args args;
             args.new_width = w->m_width;
