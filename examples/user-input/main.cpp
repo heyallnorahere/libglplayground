@@ -8,7 +8,7 @@ constexpr int32_t major_opengl_version = 3;
 #endif
 using namespace libplayground::gl;
 namespace user_input {
-    static float sensitivity = 0.05f;
+    static float sensitivity = 0.1f;
     class player_behavior : public script {
     public:
         player_behavior() {

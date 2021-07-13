@@ -8,6 +8,68 @@ constexpr int32_t major_opengl_version = 3;
 #endif
 using namespace libplayground::gl;
 namespace model_loading {
+    static float sensitivity = 0.1f;
+    class camera_behavior : public script {
+    public:
+        camera_behavior() {
+            this->m_last_mouse = input_manager::get()->get_mouse();
+        }
+        virtual void update() override {
+            this->calculate_camera_direction();
+            auto& transform = this->m_entity.get_component<components::transform_component>();
+            auto& camera = this->m_entity.get_component<components::camera_component>();
+            ref<input_manager> im = input_manager::get();
+            // todo: see user-input's player_behavior::update()
+            constexpr float movement_speed = 0.05f;
+            glm::vec3 unit_right = glm::normalize(glm::cross(camera.direction, camera.up));
+            if (im->get_key(key::W) & key_held) {
+                transform.translation += movement_speed * camera.direction;
+            }
+            if (im->get_key(key::S) & key_held) {
+                transform.translation -= movement_speed * camera.direction;
+            }
+            if (im->get_key(key::A) & key_held) {
+                transform.translation -= movement_speed * unit_right;
+            }
+            if (im->get_key(key::D) & key_held) {
+                transform.translation += movement_speed * unit_right;
+            }
+            if (im->get_key(key::O) & key_down) {
+                im->enable_mouse();
+            }
+            if (im->get_key(key::P) & key_down) {
+                im->disable_mouse();
+            }
+            if (im->get_key(key::Q) & key_down) {
+                application::get_running_application()->quit();
+            }
+        }
+    private:
+        void calculate_camera_direction() {
+            auto& camera = this->m_entity.get_component<components::camera_component>();
+            glm::vec2 mouse_position = input_manager::get()->get_mouse();
+            glm::vec2 offset = (mouse_position - this->m_last_mouse) * glm::vec2(1.f, -1.f);
+            this->m_last_mouse = mouse_position;
+            offset *= sensitivity;
+            glm::vec2 angle;
+            angle.x = glm::degrees(asin(camera.direction.y));
+            float factor = cos(glm::radians(angle.x));
+            angle.y = glm::degrees(atan2(camera.direction.z / factor, camera.direction.x / factor));
+            angle += glm::vec2(offset.y, offset.x);
+            if (angle.x > 89.f) {
+                angle.x = 89.f;
+            }
+            if (angle.x < -89.f) {
+                angle.x = -89.f;
+            }
+            glm::vec3 direction;
+            direction.x = cos(glm::radians(angle.y)) * cos(glm::radians(angle.x));
+            direction.y = sin(glm::radians(angle.x));
+            direction.z = sin(glm::radians(angle.y)) * cos(glm::radians(angle.x));
+            camera.direction = glm::normalize(direction);
+        }
+        glm::vec2 m_last_mouse;
+    };
     class model_loading_app : public application {
     public:
         model_loading_app() : application("Model loading example", 800, 600, false, major_opengl_version) { }
@@ -21,6 +83,8 @@ namespace model_loading {
             this->m_entity.add_component<components::model_component>(ref<model>::create("assets/models/static-test-2.obj"), -1);
             this->m_camera = this->m_scene->create();
             this->m_camera.add_component<components::camera_component>().direction = glm::normalize(glm::vec3(-1.f));
+            this->m_camera.add_component<components::script_component>().bind<camera_behavior>();
+            input_manager::get()->disable_mouse();
         }
         virtual void render() override {
 #if defined(BUILT_IMGUI) && !defined(NDEBUG)
@@ -39,13 +103,10 @@ namespace model_loading {
                 if (model.current_animation >= animation_count) {
                     model.current_animation = animation_count - 1;
                 }
-                static float distance_from_object = 5.f;
-                static float last_distance = 0.f;
-                ImGui::SliderFloat("Distance from object", &distance_from_object, 1.f, 100.f);
-                if (fabs(distance_from_object - last_distance) > 0.001f) {
-                    this->m_camera.get_component<components::transform_component>().translation = glm::vec3(distance_from_object);
-                    last_distance = distance_from_object;
-                }
+                auto& camera_transform = this->m_camera.get_component<components::transform_component>();
+                auto& camera_component = this->m_camera.get_component<components::camera_component>();
+                ImGui::InputFloat3("Camera position", &camera_transform.translation.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
+                ImGui::InputFloat3("Camera direction", &camera_component.direction.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
                 ImGui::End();
             }
 #endif
