@@ -24,8 +24,9 @@ namespace model_loading {
             this->m_entity = this->m_scene->create();
             this->load_models();
             this->m_entity.add_component<components::model_component>(this->m_models[this->m_current_model_index].data, -1);
+            this->m_entity.get_component<components::transform_component>().translation.z = -10;
             this->m_camera = this->m_scene->create();
-            this->m_camera.add_component<components::camera_component>().direction = glm::normalize(glm::vec3(-1.f));
+            this->m_camera.add_component<components::camera_component>().direction = glm::normalize(glm::vec3(0.0, 0.0, -1.f));
             this->m_camera.add_component<components::script_component>().bind<common::player_behavior>();
             input_manager::get()->disable_mouse();
         }
