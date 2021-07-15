@@ -22,3 +22,6 @@
 [submodule "vendor/imgui"]
 	path = vendor/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "vendor/yaml-cpp"]
+	path = vendor/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp
