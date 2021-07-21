@@ -1,0 +1,15 @@
+universal:
+  - name: BUILD_SHARED_LIBS
+    value: "OFF"
+  - name: ASSIMP_BUILD_ASSIMP_TOOLS
+    value: "OFF"
+  - name: ASSIMP_BUILD_TESTS
+    value: "OFF"
+  - name: ASSIMP_INSTALL
+    value: "OFF"
+  - name: ASSIMP_INJECT_DEBUG_POSTFIX
+    value: "OFF"
+  - name: YAML_CPP_BUILD_CONTRIB
+    value: "OFF"
+  - name: YAML_CPP_BUILD_TOOLS
+    value: "OFF"

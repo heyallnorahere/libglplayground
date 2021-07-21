@@ -2,13 +2,13 @@ extraction:
   cpp:
     prepare:
       packages:
-        - python
+        - python3.9
     after_prepare:
-      - pip install -r scripts/requirements.txt
+      - python3 -m pip install -r scripts/requirements.txt
     configure:
       command:
-        - python -m scripts sync-deps
-        - python -m scripts configure cmake Release -G "Unix Makefiles"
+        - python3 -m scripts sync-deps
+        - python3 -m scripts configure cmake Release -G "Unix Makefiles"
     index:
       build_command:
         - make -C build -j 8
