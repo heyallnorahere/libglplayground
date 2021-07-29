@@ -123,6 +123,7 @@ namespace libplayground {
                 if (!mesh->HasNormals()) {
                     throw std::runtime_error("This mesh does not have normals!");
                 }
+                mesh_.get_vertex_data().reserve(mesh->mNumVertices);
                 for (size_t i = 0; i < (size_t)mesh->mNumVertices; i++) {
                     vertex v;
                     v.pos = from_assimp_vector<3>(mesh->mVertices[i]);
@@ -132,6 +133,7 @@ namespace libplayground {
                     }
                     mesh_.get_vertex_data().push_back(v);
                 }
+                mesh_.get_index_data().reserve(mesh->mNumFaces);
                 for (size_t i = 0; i < (size_t)mesh->mNumFaces; i++) {
                     if (mesh->mFaces[i].mNumIndices != 3) {
                         throw std::runtime_error("Face does not have exactly 3 indices!");
